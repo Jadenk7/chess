@@ -48,7 +48,7 @@ public class ChessPiece {
      */
 
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
@@ -65,7 +65,60 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+    private Collection<ChessMove> Bishop_Calc(ChessBoard board, ChessPosition position) {
+        Collection<ChessMove> Possibilities = new ArrayList<>();
+        int row = position.getRow();
+        int col = position.getColumn();
+        int start_row = row;
+        int start_col = col;
+        while (row < 9 && col < 9) {
+            if (row + 1 < 9 && col + 1 < 9) {
+                Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col + 1), null));
+            }
+            row += 1;
+            col += 1;
+        }
+        row = start_row;
+        col = start_col;
+        while (row < 9 && 0 < col) {
+            if (row + 1 < 9 && col - 1 > 0) {
+                ChessPosition aheadPosition = new ChessPosition(row + 1, col - 1);
+                if (board.getPiece(aheadPosition) != null) {
+                    ChessPiece myPiece = board.getPiece(position);
+                    ChessPiece otherPiece = board.getPiece(aheadPosition);
+                    if (myPiece.pieceColor != otherPiece.pieceColor) {
+                        Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col - 1), null));
+                    }
+                }
+            }
+            row += 1;
+            col -= 1;
+        }
+        row = start_row;
+        col = start_col;
+        while (0 < row && 0 < col) {
+            if (row - 1 > 0 && col - 1 > 0) {
+                Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col - 1), null));
+            }
+            row -= 1;
+            col -= 1;
+        }
+        row = start_row;
+        col = start_col;
+        while (0 < row && 0 < col) {
+            if (row - 1 > 0 && col + 1 < 9) {
+                Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col + 1), null));
+            }
+            row -= 1;
+            col += 1;
+        }
+        return Possibilities;
+    }
+
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        if (this.type == PieceType.BISHOP) {
+            return Bishop_Calc(board, myPosition);
+        }
+        return null;
     }
 }
