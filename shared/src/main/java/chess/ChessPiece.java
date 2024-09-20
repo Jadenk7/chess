@@ -2,6 +2,7 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -34,13 +35,26 @@ public class ChessPiece {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type && Objects.equals(board, that.board) && Objects.equals(myPosition, that.myPosition);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(pieceColor, type, board, myPosition);
+    }
+
+    @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceColor=" + pieceColor +
+                ", type=" + type +
+                ", board=" + board +
+                ", myPosition=" + myPosition +
+                '}';
     }
 
     /**
@@ -321,26 +335,44 @@ public class ChessPiece {
         if (board.getPiece(position).pieceColor == ChessGame.TeamColor.WHITE){
             if (row == 2) {
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col);
-                ChessPosition diagChecker1 = new ChessPosition(row + 1, col + 1);
-                ChessPosition diagChecker2 = new ChessPosition(row + 1, col - 1);
+                if (col + 1 < 8) {
+                    ChessPosition diagChecker1 = new ChessPosition(row + 1, col + 1);
+                    if (board.getPiece(diagChecker1) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            if (row + 1 == 8) {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
+                            }
+                            else {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                            }
+                        }
+                    }
+                }
+                if (col - 1 > 0) {
+                    ChessPosition diagChecker2 = new ChessPosition(row + 1, col - 1);
+                    if (board.getPiece(diagChecker2) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            if (row + 1 == 8) {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
+                            }
+                            else {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                            }
+                        }
+                    }
+                }
                 if (board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
-                }
-                if (board.getPiece(diagChecker1) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
-                    }
-                }
-                if (board.getPiece(diagChecker2) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
-                    }
-                }
-                if (board.getPiece(aheadPosition) == null) {
                     int row2 = position.getRow() + 1;
                     ChessPosition aheadPosition2 = new ChessPosition(row2 + 1, col);
                     if (board.getPiece(aheadPosition2) == null) {
@@ -350,8 +382,26 @@ public class ChessPiece {
             }
             else {
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col);
-                ChessPosition diagChecker1 = new ChessPosition(row + 1, col + 1);
-                ChessPosition diagChecker2 = new ChessPosition(row + 1, col - 1);
+                if (col + 1 < 8) {
+                    ChessPosition diagChecker1 = new ChessPosition(row + 1, col + 1);
+                    if (board.getPiece(diagChecker1) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                        }
+                    }
+                }
+                if (col - 1 > 0) {
+                    ChessPosition diagChecker2 = new ChessPosition(row + 1, col - 1);
+                    if (board.getPiece(diagChecker2) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                        }
+                    }
+                }
                 if (board.getPiece(aheadPosition) == null) {
                     if (row + 1 == 8){
                         Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
@@ -363,61 +413,33 @@ public class ChessPiece {
                         Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
                     }
                 }
-                if (board.getPiece(diagChecker1) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        if (row + 1 == 8){
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
-                        }
-                        else {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
-                        }
-                    }
-                }
-                if (board.getPiece(diagChecker2) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        if (row + 1 == 8) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
-                        }
-                        else {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
-                        }
-                    }
-                }
             }
         }
         else {
             if (row == 7) {
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col);
-                ChessPosition diagChecker1 = new ChessPosition(row - 1, col + 1);
-                ChessPosition diagChecker2 = new ChessPosition(row - 1, col - 1);
+                if (col + 1 < 8) {
+                    ChessPosition diagChecker1 = new ChessPosition(row - 1, col + 1);
+                    if (board.getPiece(diagChecker1) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                        }
+                    }
+                }
+                if (col - 1 > 0) {
+                    ChessPosition diagChecker2 = new ChessPosition(row - 1, col - 1);
+                    if (board.getPiece(diagChecker2) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                        }
+                    }
+                }
                 if (board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
-                }
-                if (board.getPiece(diagChecker1) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
-                    }
-                }
-                if (board.getPiece(diagChecker2) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
-                    }
-                }
-                if (board.getPiece(aheadPosition) == null) {
                     int row2 = position.getRow() - 1;
                     ChessPosition aheadPosition2 = new ChessPosition(row2 - 1, col);
                     if (board.getPiece(aheadPosition2) == null) {
@@ -427,8 +449,42 @@ public class ChessPiece {
             }
             else {
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col);
-                ChessPosition diagChecker1 = new ChessPosition(row - 1, col + 1);
-                ChessPosition diagChecker2 = new ChessPosition(row - 1, col - 1);
+                if (col + 1 < 8) {
+                    ChessPosition diagChecker1 = new ChessPosition(row - 1, col + 1);
+                    if (board.getPiece(diagChecker1) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            if (row - 1 == 1) {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
+                            }
+                            else {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                            }
+                        }
+                    }
+                }
+                if (col - 1 > 0) {
+                    ChessPosition diagChecker2 = new ChessPosition(row - 1, col - 1);
+                    if (board.getPiece(diagChecker2) != null) {
+                        ChessPiece myPawn = board.getPiece(position);
+                        ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
+                        if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
+                            if (row - 1 == 1) {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
+                            }
+                            else {
+                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                            }
+                        }
+                    }
+                }
                 if (board.getPiece(aheadPosition) == null) {
                     if (row - 1 == 1){
                         Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
@@ -438,36 +494,6 @@ public class ChessPiece {
                     }
                     else {
                         Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
-                    }
-                }
-                if (board.getPiece(diagChecker1) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        if (row - 1 == 1){
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
-                        }
-                        else {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
-                        }
-                    }
-                }
-                if (board.getPiece(diagChecker2) != null) {
-                    ChessPiece myPawn = board.getPiece(position);
-                    ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
-                    if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                        if (row - 1 == 1) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
-                        }
-                        else {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
-                        }
                     }
                 }
             }
@@ -602,6 +628,12 @@ public class ChessPiece {
         }
         return Possibilities;
     }
+    private Collection<ChessMove> queenCalc(ChessBoard board, ChessPosition position) {
+        Collection<ChessMove> moves1 = rookCalc(board, position);
+        Collection<ChessMove> moves2 = bishopCalc(board, position);
+        moves1.addAll(moves2);
+        return moves1;
+    }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         if (this.type == PieceType.BISHOP) {
             return bishopCalc(board, myPosition);
@@ -617,6 +649,9 @@ public class ChessPiece {
         }
         if (this.type == PieceType.ROOK) {
             return rookCalc(board, myPosition);
+        }
+        if (this.type == PieceType.QUEEN) {
+            return queenCalc(board, myPosition);
         }
         return null;
     }
