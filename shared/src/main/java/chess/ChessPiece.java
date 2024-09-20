@@ -479,6 +479,127 @@ public class ChessPiece {
         Collection<ChessMove> Possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
+        int startingRow = position.getRow();
+        int startingCol = position.getColumn();
+        if (row != 8) {
+            while (row < 8) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
+                ChessPosition aheadPosition = new ChessPosition(row + 1, col);
+                if (row + 1 == 8) {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    break;
+                }
+                if (board.getPiece(aheadPosition) != null) {
+                    ChessPiece myRook = board.getPiece(position);
+                    ChessPiece rookNeighbor = board.getPiece(aheadPosition);
+                    if (myRook.pieceColor != rookNeighbor.pieceColor) {
+                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        break;
+                    }
+                    else {
+                        if (row != startingRow) {
+                            Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), currentPosition, null));
+                            break;
+                        }
+                        break;
+                    }
+                }
+                else {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    row += 1;
+                }
+            }
+        }
+        row = startingRow;
+        if (row != 1) {
+            while (row > 1) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
+                ChessPosition aheadPosition = new ChessPosition(row - 1, col);
+                if (row - 1 == 1) {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    break;
+                }
+                if (board.getPiece(aheadPosition) != null) {
+                    ChessPiece myRook = board.getPiece(position);
+                    ChessPiece rookNeighbor = board.getPiece(aheadPosition);
+                    if (myRook.pieceColor != rookNeighbor.pieceColor) {
+                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        break;
+                    }
+                    else {
+                        if (row != startingRow){
+                            Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), currentPosition, null));
+                            break;
+                        }
+                        break;
+                    }
+                }
+                else {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    row -= 1;
+                }
+            }
+        }
+        row = startingRow;
+        if (col != 8) {
+            while (col < 8) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
+                ChessPosition aheadPosition = new ChessPosition(row, col + 1);
+                if (col + 1 == 8) {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    break;
+                }
+                if (board.getPiece(aheadPosition) != null) {
+                    ChessPiece myRook = board.getPiece(position);
+                    ChessPiece rookNeighbor = board.getPiece(aheadPosition);
+                    if (myRook.pieceColor != rookNeighbor.pieceColor) {
+                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        break;
+                    }
+                    else {
+                        if (col != startingCol) {
+                            Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), currentPosition, null));
+                            break;
+                        }
+                        break;
+                    }
+                }
+                else {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    col += 1;
+                }
+            }
+        }
+        col = startingCol;
+        if (col != 1) {
+            while (col > 1) {
+                ChessPosition currentPosition = new ChessPosition(row, col);
+                ChessPosition aheadPosition = new ChessPosition(row, col - 1);
+                if (col - 1 == 1) {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    break;
+                }
+                if (board.getPiece(aheadPosition) != null) {
+                    ChessPiece myRook = board.getPiece(position);
+                    ChessPiece rookNeighbor = board.getPiece(aheadPosition);
+                    if (myRook.pieceColor != rookNeighbor.pieceColor) {
+                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        break;
+                    }
+                    else {
+                        if (col != startingCol) {
+                            Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), currentPosition, null));
+                            break;
+                        }
+                        break;
+                    }
+                }
+                else {
+                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    col -= 1;
+                }
+            }
+        }
         return Possibilities;
     }
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
