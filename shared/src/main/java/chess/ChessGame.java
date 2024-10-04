@@ -55,6 +55,23 @@ public class ChessGame {
         board.addPiece(move.getStartPosition(), origStart);
         board.addPiece(move.getEndPosition(), origEnd);
     }
+    public ChessPosition kingFinder(TeamColor color){
+        ChessPosition myKing = null;
+        for(int row = 0; row < 8; row++) {
+            for (int column = 0; column < 8; column++) {
+                ChessPiece currentPiece = checkers.getPiece(new ChessPosition(row, column));
+                if(currentPiece != null) {
+                    if (currentPiece.getTeamColor() == color) {
+                        if (currentPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                            myKing = new ChessPosition(row, column);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return myKing;
+    }
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -113,7 +130,25 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (kingFinder(teamColor) == null){
+            return false;
+        }
+        for(int row = 0; row < 8; row++){
+            for(int column = 0; column < 8; column++){
+                ChessPosition currentPos = new ChessPosition(row, column);
+                ChessPiece currentPiece = checkers.getPiece(currentPos);
+                if(currentPiece != null){
+                    if (currentPiece.getTeamColor() != teamColor) {
+                        for (ChessMove move : currentPiece.pieceMoves(checkers, currentPos)) {
+                            if (move.getEndPosition() == kingFinder(teamColor)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
