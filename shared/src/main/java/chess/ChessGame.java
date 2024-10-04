@@ -1,5 +1,5 @@
 package chess;
-
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -9,16 +9,19 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private ChessBoard pieces;
+    private TeamColor teamSide = TeamColor.WHITE;
 
     public ChessGame() {
-
+        this.pieces = new ChessBoard();
+        pieces.resetBoard();
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return teamSide;
     }
 
     /**
