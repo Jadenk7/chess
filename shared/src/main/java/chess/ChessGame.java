@@ -164,6 +164,26 @@ public class ChessGame {
         if (isInCheck(teamColor) == false){
             return false;
         }
+        for(int row = 0; row < 8; row++){
+            for(int column = 0; column < 8; column++){
+                ChessPosition currentPosition = new ChessPosition(row, column);
+                ChessPiece currentPiece = checkers.getPiece(currentPosition);
+                if(currentPiece != null){
+                    if (currentPiece.getTeamColor() == teamColor) {
+                        for(ChessMove move : currentPiece.pieceMoves(checkers, currentPosition)){
+                            ChessPiece originalStart = checkers.getPiece(move.getStartPosition());
+                            ChessPiece originalEnd = checkers.getPiece(move.getEndPosition());
+                            moveIt(checkers, move);
+                            if(isInCheck(teamColor) == false){
+                                unmoveIt(checkers, move, originalStart, originalEnd);
+                                return false;
+                            }
+                            unmoveIt(checkers, move, originalStart, originalEnd);
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -175,7 +195,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return true;
     }
 
     /**
