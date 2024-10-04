@@ -42,14 +42,18 @@ public class ChessGame {
     }
     public void moveIt(ChessBoard board, ChessMove move) {
         ChessPiece startPiece = board.getPiece(move.getStartPosition());
-        board.addPiece(move.getStartPosition(), null);
-        board.addPiece(move.getEndPosition(), startPiece);
+        if (move.getPromotionPiece() != null) {
+            board.addPiece(move.getStartPosition(), null);
+            board.addPiece(move.getEndPosition(), new ChessPiece(getTeamTurn(), move.getPromotionPiece()));
+        }
+        else {
+            board.addPiece(move.getStartPosition(), null);
+            board.addPiece(move.getEndPosition(), startPiece);
+        }
     }
-    public void unmoveIt(ChessBoard board, ChessMove move) {
-        ChessPiece startPiece = board.getPiece(move.getStartPosition());
-        ChessPiece endPiece = board.getPiece(move.getEndPosition());
-        board.addPiece(move.getStartPosition(), startPiece);
-        board.addPiece(move.getEndPosition(), endPiece);
+    public void unmoveIt(ChessBoard board, ChessMove move, ChessPiece origStart, ChessPiece origEnd) {
+        board.addPiece(move.getStartPosition(), origStart);
+        board.addPiece(move.getEndPosition(), origEnd);
     }
     /**
      * Gets a valid moves for a piece at the given location
@@ -62,11 +66,13 @@ public class ChessGame {
         ChessPiece myPiece = checkers.getPiece(startPosition);
         Collection<ChessMove> moveList = new ArrayList<>();
         for (ChessMove play : myPiece.pieceMoves(checkers, startPosition)) {
+            ChessPiece originalStart = checkers.getPiece(play.getStartPosition());
+            ChessPiece originalEnd = checkers.getPiece(play.getEndPosition());
             moveIt(checkers, play);
             if (isInCheck(myPiece.getTeamColor()) == false) {
                 moveList.add(play);
             }
-            unmoveIt(checkers, play);
+            unmoveIt(checkers, play, originalStart, originalEnd);
         }
         return moveList;
     }
@@ -78,7 +84,22 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        ChessPiece startPiece = checkers.getPiece(move.getStartPosition());
+        Collection<ChessMove> movesAllowed = validMoves(move.getStartPosition());
+        if(startPiece.getTeamColor() != this.getTeamTurn()){
+            throw new InvalidMoveException("Not your team! How kind of you to consider the needs of your opponent :)");
+        }
+        if(startPiece == null){
+            throw new InvalidMoveException("Not a piece! Why are you trying to move nothing, silly?");
+        }
+        if(movesAllowed.contains(move)){
+            if (move.getPromotionPiece() != null) {
+
+            }
+        }
+        else {
+            throw new InvalidMoveException("Illegal! Prohibited in the name of the law!");
+        }
     }
 
     /**
