@@ -93,8 +93,12 @@ public class ChessGame {
             throw new InvalidMoveException("Not a piece! Why are you trying to move nothing, silly?");
         }
         if(movesAllowed.contains(move)){
-            if (move.getPromotionPiece() != null) {
-
+            moveIt(checkers, move);
+            if (this.getTeamTurn() == TeamColor.WHITE) {
+                this.setTeamTurn(TeamColor.BLACK);
+            }
+            else {
+                this.setTeamTurn(TeamColor.WHITE);
             }
         }
         else {
