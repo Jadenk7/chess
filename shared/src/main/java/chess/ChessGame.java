@@ -40,7 +40,17 @@ public class ChessGame {
         WHITE,
         BLACK
     }
-
+    public void moveIt(ChessBoard board, ChessMove move) {
+        ChessPiece startPiece = board.getPiece(move.getStartPosition());
+        board.addPiece(move.getStartPosition(), null);
+        board.addPiece(move.getEndPosition(), startPiece);
+    }
+    public void unmoveIt(ChessBoard board, ChessMove move) {
+        ChessPiece startPiece = board.getPiece(move.getStartPosition());
+        ChessPiece endPiece = board.getPiece(move.getEndPosition());
+        board.addPiece(move.getStartPosition(), startPiece);
+        board.addPiece(move.getEndPosition(), endPiece);
+    }
     /**
      * Gets a valid moves for a piece at the given location
      *
@@ -51,10 +61,14 @@ public class ChessGame {
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
         ChessPiece myPiece = checkers.getPiece(startPosition);
         Collection<ChessMove> moveList = new ArrayList<>();
-        return null;
-        //for (ChessMove play : myPiece.pieceMoves(checkers, startPosition)) {
-            //checkers.getPiece(play.getEndPosition());
-        //}
+        for (ChessMove play : myPiece.pieceMoves(checkers, startPosition)) {
+            moveIt(checkers, play);
+            if (isInCheck(myPiece.getTeamColor()) == false) {
+                moveList.add(play);
+            }
+            unmoveIt(checkers, play);
+        }
+        return moveList;
     }
 
     /**
