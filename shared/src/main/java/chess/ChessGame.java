@@ -9,12 +9,12 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private ChessBoard pieces;
+    private ChessBoard checkers;
     private TeamColor teamSide = TeamColor.WHITE;
 
     public ChessGame() {
-        this.pieces = new ChessBoard();
-        pieces.resetBoard();
+        this.checkers = new ChessBoard();
+        checkers.resetBoard();
     }
 
     /**
@@ -30,7 +30,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.teamSide = team;
     }
 
     /**
@@ -49,7 +49,12 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece myPiece = checkers.getPiece(startPosition);
+        Collection<ChessMove> moveList = new ArrayList<>();
+        return null;
+        //for (ChessMove play : myPiece.pieceMoves(checkers, startPosition)) {
+            //checkers.getPiece(play.getEndPosition());
+        //}
     }
 
     /**
