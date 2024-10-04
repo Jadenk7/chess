@@ -511,7 +511,7 @@ public class ChessPiece {
             while (row < 8) {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col);
-                if (row + 1 == 8) {
+                if (row + 1 == 8 && board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
@@ -541,7 +541,7 @@ public class ChessPiece {
             while (row > 1) {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col);
-                if (row - 1 == 1) {
+                if (row - 1 == 1 && board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
@@ -571,7 +571,7 @@ public class ChessPiece {
             while (col < 8) {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row, col + 1);
-                if (col + 1 == 8) {
+                if (col + 1 == 8 && board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
@@ -601,7 +601,7 @@ public class ChessPiece {
             while (col > 1) {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row, col - 1);
-                if (col - 1 == 1) {
+                if (col - 1 == 1 && board.getPiece(aheadPosition) == null) {
                     Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
