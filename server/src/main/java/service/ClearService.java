@@ -18,7 +18,7 @@ public class ClearService {
         UserDAO user = new UserDAO();
         AuthDAO auth = new AuthDAO();
         try {
-            
+
         }
         catch (DataAccessException e) {
             return new ClearResponse(e.getMessage());
