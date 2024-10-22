@@ -4,8 +4,8 @@ import model.GameData;
 import RequestandResponse.CreateGameRequest;
 import RequestandResponse.CreateGameResponse;
 public class CreateGameService {
-    private AuthDAO auth = new AuthDAO();
     private GameDAO gameDA = new GameDAO();
+    private AuthDAO auth = new AuthDAO();
     public CreateGameResponse gameCreator(CreateGameRequest request, String authToken) {
         try {
             if(request.getName() == null){

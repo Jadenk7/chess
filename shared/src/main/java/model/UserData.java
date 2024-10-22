@@ -9,10 +9,8 @@ public class UserData {
         this.password = password;
         this.email = email;
     }
-    public String getName(){
-
-        return username;
-    }public void setName(String username){
+    public String getName(){return username;}
+    public void setName(String username){
         this.username = username;
     }
     public String getPassword(){

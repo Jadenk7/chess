@@ -31,12 +31,39 @@ public class ServiceUnitTests {
     }
     @Test
     @Order(3)
-    public void RegisterNotEnoughInfo(){
+    public void RegisterNotEnoughInfo() {
         RegRequest request = new RegRequest(null, me.getPassword(), me.getEmail());
         RegisterService service = new RegisterService();
         RegResponse response = service.registration(request);
         Assertions.assertEquals("Error! Fill all required fields!", response.getMessage());
         Assertions.assertNull(response.getAuth());
+    }
 
+    @Test
+    @Order(4)
+    public void CreationSuccess() {
+        GameData game = new GameData(500, null, null, "TheBestGame", null);
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        CreateGameService gameServ = new CreateGameService();
+        CreateGameRequest gameReq = new CreateGameRequest("OtherGame");
+        CreateGameResponse gameResp = gameServ.gameCreator(gameReq, response.getAuth());
+        Assertions.assertNotNull(game.getID());
+        Assertions.assertNull(gameResp.getMessage());
+        Assertions.assertNotNull(gameReq.getName());
+    }
+
+    @Test
+    @Order(5)
+    public void CreationFailure() {
+        RegRequest request = new RegRequest(me.getName(), me.getEmail(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        CreateGameService gameServ = new CreateGameService();
+        CreateGameRequest gameReq = new CreateGameRequest(null);
+        CreateGameResponse gameResp = gameServ.gameCreator(gameReq, response.getAuth());
+        Assertions.assertNotNull(response.getAuth());
+        Assertions.assertEquals("Error! No name", gameResp.getMessage());
     }
 }
