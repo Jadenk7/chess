@@ -1,7 +1,7 @@
 package server.handler;
+import RequestandResponse.ClearResponse;
 import com.google.gson.Gson;
 import service.ClearService;
-import service.*;
 import spark.*;
 public class ClearHandler implements Route{
     @Override
