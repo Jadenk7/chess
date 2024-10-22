@@ -7,6 +7,9 @@ public class GameData implements Comparable{
     private int gameID;
     private String blackName;
     private String whiteName;
+
+    //Put in placeholder methods for lower parameters
+    public GameData(){}
     public GameData(int gameID, String blackName, String whiteName, String gameName, ChessGame game) {
         this.gameID = gameID;
         this.gameName = gameName;
