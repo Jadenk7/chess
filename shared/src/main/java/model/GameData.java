@@ -7,7 +7,7 @@ public class GameData implements Comparable{
     private int gameID;
     private String blackName;
     private String whiteName;
-    public void Game(int gameID, String blackName, String whiteName, String gameName, ChessGame game) {
+    public void GameData(int gameID, String blackName, String whiteName, String gameName, ChessGame game) {
         this.gameID = gameID;
         this.gameName = gameName;
         this.game = game;
