@@ -1,5 +1,5 @@
 package service;
-import RequestandResponse.ClearResponse;
+import RequestandResponse.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -18,5 +18,25 @@ public class ServiceUnitTests {
         ClearService clearService = new ClearService();
         ClearResponse clearResponse = clearService.clearEverything();
         Assertions.assertEquals("Success", clearResponse.getResponse());
+    }
+    @Test
+    @Order(2)
+    public void RegisterSuccess(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        Assertions.assertEquals("Jadenizer", response.getName());
+        Assertions.assertNotNull(response.getAuth());
+        Assertions.assertNull(response.getMessage());
+    }
+    @Test
+    @Order(3)
+    public void RegisterNotEnoughInfo(){
+        RegRequest request = new RegRequest(null, me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        Assertions.assertEquals("Error! Fill all required fields!", response.getMessage());
+        Assertions.assertNull(response.getAuth());
+
     }
 }
