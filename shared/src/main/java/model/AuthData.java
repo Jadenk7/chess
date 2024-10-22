@@ -1,9 +1,8 @@
 package model;
-
 public class AuthData {
     private String authToken;
     private String username;
-    public void AuthToken(String authToken, String username) {
+    public void AuthData(String authToken, String username) {
         this.authToken = authToken;
         this.username = username;
     }
