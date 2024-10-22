@@ -3,10 +3,9 @@ import com.google.gson.Gson;
 import service.ClearService;
 import service.*;
 import spark.*;
-import java.io.*;
 public class ClearHandler implements Route{
     @Override
-    public Object handle(Request request, Response response) throws IOException {
+    public Object handle(Request request, Response response) {
         ClearService service = new ClearService();
         ClearResponse clearResponse = service.clearEverything();
         if(clearResponse.getResponse() == "Success"){
