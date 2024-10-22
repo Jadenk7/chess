@@ -1,14 +1,6 @@
 package service;
 import dataaccess.*;
-class ClearResponse {
-    public ClearResponse(String response) {
-        this.response = response;
-    }
-    public String getResponse() {
-        return response;
-    }
-    private String response;
-}
+
 public class ClearService {
     public ClearResponse clearEverything() {
         GameDAO game = new GameDAO();
@@ -22,6 +14,6 @@ public class ClearService {
         catch (DataAccessException exception) {
             return new ClearResponse(exception.getMessage());
         }
-        return new ClearResponse("");
+        return new ClearResponse("Success");
     }
 }
