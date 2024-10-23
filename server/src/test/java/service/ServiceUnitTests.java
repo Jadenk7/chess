@@ -105,4 +105,27 @@ public class ServiceUnitTests {
         Assertions.assertEquals("Error! Color is taken", blackResponse.getMessage());
         Assertions.assertEquals("Error! Color is taken", whiteResponse.getMessage());
     }
+    @Test
+    @Order(8)
+    public void LoginSuccess(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        LoginService loginService = new LoginService();
+        LoginRequest loginRequest = new LoginRequest(me.getName(), me.getPassword());
+        LoginResponse loginResponse = loginService.logger(loginRequest);
+        Assertions.assertNull(loginResponse.getMessage());
+    }
+
+    @Test
+    @Order(9)
+    public void WrongPasswordLogin(){
+        RegRequest request = new RegRequest(me.getName(), "Uhhhhh I Don't Know The Password", me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        LoginService loginService = new LoginService();
+        LoginRequest loginRequest = new LoginRequest(me.getName(), me.getPassword());
+        LoginResponse loginResponse = loginService.logger(loginRequest);
+        Assertions.assertEquals("Error! Wrong password", loginResponse.getMessage());
+    }
 }
