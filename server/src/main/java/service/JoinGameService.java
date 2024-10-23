@@ -30,7 +30,7 @@ public class JoinGameService {
                     if(authDAO.returnToken(authToken) == null){
                         return new JoinGameResponse("Error! Give auth Token");
                     }
-                    return new JoinGameResponse();
+                    return new JoinGameResponse("Error! No game");
                 }
             }
             else{

@@ -11,6 +11,9 @@ public class LoginService {
         try{
             if(request.getName() != null && request.getPassword() != null){
                 UserData thisUser = userDAO.returnUser(request.getName());
+                if (thisUser == null){
+                    return new LoginResponse("Error! Wrong password");
+                }
                 if (thisUser.getPassword().equals(request.getPassword())) {
                     String Tokenize = UUID.randomUUID().toString();
                     authDAO.createToken(new AuthData(Tokenize, request.getName()));
