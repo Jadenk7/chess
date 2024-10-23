@@ -111,10 +111,10 @@ public class ServiceUnitTests {
         RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
         RegisterService service = new RegisterService();
         RegResponse response = service.registration(request);
-        LoginService loginService = new LoginService();
-        LoginRequest loginRequest = new LoginRequest(me.getName(), me.getPassword());
-        LoginResponse loginResponse = loginService.logger(loginRequest);
-        Assertions.assertNull(loginResponse.getMessage());
+        LoginService loginServ = new LoginService();
+        LoginRequest loginReq = new LoginRequest(me.getName(), me.getPassword());
+        LoginResponse loginResp = loginServ.logger(loginReq);
+        Assertions.assertNull(loginResp.getMessage());
     }
 
     @Test
@@ -123,9 +123,36 @@ public class ServiceUnitTests {
         RegRequest request = new RegRequest(me.getName(), "Uhhhhh I Don't Know The Password", me.getEmail());
         RegisterService service = new RegisterService();
         RegResponse response = service.registration(request);
-        LoginService loginService = new LoginService();
+        LoginService loginServ = new LoginService();
+        LoginRequest loginReq = new LoginRequest(me.getName(), me.getPassword());
+        LoginResponse loginResp = loginServ.logger(loginReq);
+        Assertions.assertEquals("Error! Wrong password", loginResp.getMessage());
+    }
+    @Test
+    @Order(10)
+    public void LoggedOut(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        LoginService loginServ = new LoginService();
+        LoginRequest loginReq = new LoginRequest(me.getName(), me.getPassword());
+        LoginResponse loginResp = loginServ.logger(loginReq);
+        LogoutService logoutServ = new LogoutService();
+        LogoutResponse logoutResp = logoutServ.logout(response.getAuth());
+        Assertions.assertNull(logoutResp.getMessage());
+    }
+
+    @Test
+    @Order(11)
+    public void LogoutAuthEmpty(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
         LoginRequest loginRequest = new LoginRequest(me.getName(), me.getPassword());
-        LoginResponse loginResponse = loginService.logger(loginRequest);
-        Assertions.assertEquals("Error! Wrong password", loginResponse.getMessage());
+        LoginService loginService = new LoginService();
+        LoginResponse loginResp = loginService.logger(loginRequest);
+        LogoutService logoutServ = new LogoutService();
+        LogoutResponse logoutResp = logoutServ.logout(null);
+        Assertions.assertEquals("Error! No auth token", logoutResp.getMessage());
     }
 }
