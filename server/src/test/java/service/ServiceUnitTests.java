@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import model.*;
+import java.util.*;
 import chess.ChessGame;
 
 public class ServiceUnitTests {
@@ -154,5 +155,40 @@ public class ServiceUnitTests {
         LogoutService logoutServ = new LogoutService();
         LogoutResponse logoutResp = logoutServ.logout(null);
         Assertions.assertEquals("Error! No auth token", logoutResp.getMessage());
+    }
+    @Test
+    @Order(12)
+    public void ListGamesSuccess(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        CreateGameService game1Serv = new CreateGameService();
+        CreateGameRequest game1Req = new CreateGameRequest("Jaden");
+        CreateGameService game2Serv = new CreateGameService();
+        CreateGameRequest game2Req = new CreateGameRequest("Kunzler");
+        ListGamesService gameListService = new ListGamesService();
+        ListGamesResponse gameListResponse = gameListService.listGames(response.getAuth());
+        ArrayList<GameData> gameList1 = new ArrayList<>(gameListResponse.getGameList());
+        ArrayList<GameData> gameList2 = new ArrayList<>();
+        GameData otherGame = new GameData(1, null, null, "Jaden", null);
+        GameData otherOtherGame = new GameData(2, null, null, "Kunzler", null);
+        gameList2.add(otherGame);
+        gameList2.add(otherOtherGame);
+        Assertions.assertNull(gameListResponse.getMessage());
+    }
+
+    @Test
+    @Order(13)
+    public void ListGamesWithoutAuth(){
+        RegRequest request = new RegRequest(me.getName(), me.getPassword(), me.getEmail());
+        RegisterService service = new RegisterService();
+        RegResponse response = service.registration(request);
+        CreateGameService game1Serv = new CreateGameService();
+        CreateGameRequest game1Req = new CreateGameRequest("Jaden");
+        CreateGameService game2Serv = new CreateGameService();
+        CreateGameRequest game2Req = new CreateGameRequest("Kunzler");
+        ListGamesService gameListService = new ListGamesService();
+        ListGamesResponse gameListResponse = gameListService.listGames(response.getAuth()+1);
+        Assertions.assertEquals("Error! No auth token", gameListResponse.getMessage());
     }
 }
