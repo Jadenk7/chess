@@ -8,7 +8,7 @@ public class ClearHandler implements Route{
     public Object handle(Request request, Response response) {
         ClearService service = new ClearService();
         ClearResponse clearResponse = service.clearEverything();
-        if(clearResponse.getResponse() == "Success"){
+        if(clearResponse.getResponse() == null){
             response.status(200);
         }
         else{

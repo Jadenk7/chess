@@ -15,6 +15,6 @@ public class ClearService {
         catch (DataAccessException exception) {
             return new ClearResponse(exception.getMessage());
         }
-        return new ClearResponse("Success");
+        return new ClearResponse();
     }
 }
