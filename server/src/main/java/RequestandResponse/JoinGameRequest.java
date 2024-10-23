@@ -1,8 +1,8 @@
 package RequestandResponse;
 import chess.ChessGame;
 public class JoinGameRequest {
-    public JoinGameRequest(ChessGame.TeamColor colorOfPlayer, int gameID){
-        this.colorOfPlayer = colorOfPlayer;
+    public JoinGameRequest(ChessGame.TeamColor playerColor, int gameID){
+        this.playerColor = playerColor;
         this.gameID = gameID;
     }
     public void setGameID(int gameID) {
@@ -12,11 +12,11 @@ public class JoinGameRequest {
         return gameID;
     }
     public void setPlayerColor(ChessGame.TeamColor colorOfPlayer) {
-        this.colorOfPlayer = colorOfPlayer;
+        this.playerColor = colorOfPlayer;
     }
     public ChessGame.TeamColor getPlayerColor() {
-        return colorOfPlayer;
+        return playerColor;
     }
-    private ChessGame.TeamColor colorOfPlayer;
+    private ChessGame.TeamColor playerColor;
     private int gameID;
 }

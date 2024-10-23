@@ -168,7 +168,7 @@ public class ServiceUnitTests {
         CreateGameRequest game2Req = new CreateGameRequest("Kunzler");
         ListGamesService gameListService = new ListGamesService();
         ListGamesResponse gameListResponse = gameListService.listGames(response.getAuth());
-        ArrayList<GameData> gameList1 = new ArrayList<>(gameListResponse.getGameList());
+        ArrayList<GameData> gameList1 = new ArrayList<>(gameListResponse.getGames());
         ArrayList<GameData> gameList2 = new ArrayList<>();
         GameData otherGame = new GameData(1, null, null, "Jaden", null);
         GameData otherOtherGame = new GameData(2, null, null, "Kunzler", null);

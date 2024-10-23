@@ -11,7 +11,7 @@ public class ListGamesService {
                 return new ListGamesResponse("Error! No auth token");
             }
             else{
-                gameMap.setGameList(gameDAO.returnGameMap());
+                gameMap.setGames(gameDAO.returnGameMap());
                 return gameMap;
             }
         }

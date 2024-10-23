@@ -3,12 +3,12 @@ public class CreateGameResponse {
     public CreateGameResponse(String message){
         this.message = message;
     }
-    public CreateGameResponse(int ID) {
-        this.ID = ID;
+    public CreateGameResponse(int gameID) {
+        this.gameID = gameID;
     }
-    public CreateGameResponse(String message, int ID){
+    public CreateGameResponse(String message, int gameID){
         this.message = message;
-        this.ID = ID;
+        this.gameID = gameID;
     }
     public void setMessage(String message){
         this.message = message;
@@ -17,11 +17,11 @@ public class CreateGameResponse {
         return message;
     }
     public void setID(int ID){
-        this.ID = ID;
+        this.gameID = ID;
     }
     public int getID() {
-        return ID;
+        return gameID;
     }
     private String message;
-    private Integer ID;
+    private Integer gameID;
 }

@@ -14,10 +14,10 @@ public class JoinGameService {
                 if(request.getPlayerColor() != null){
                     AuthData authtoken = authDAO.returnToken(authToken);
                     if(authtoken != null) {
-                        if (game.getBlackName() != null && request.getPlayerColor() == ChessGame.TeamColor.BLACK) {
+                        if (game.getBlackUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.BLACK) {
                             return new JoinGameResponse("Error! Color is taken");
                         }
-                        if (game.getWhiteName() != null && request.getPlayerColor() == ChessGame.TeamColor.WHITE) {
+                        if (game.getWhiteUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.WHITE) {
                             return new JoinGameResponse("Error! Color is taken");
                         }
                         gameDAO.playerNamer(authtoken.getName(), request.getGameID(), request.getPlayerColor());

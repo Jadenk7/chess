@@ -4,7 +4,7 @@ import java.util.*;
 import model.AuthData;
 
 public class AuthDAO {
-    private HashMap<String, AuthData> authMap = new HashMap<>();
+    private static HashMap<String, AuthData> authMap = new HashMap<>();
     public void createToken(AuthData auth) throws DataAccessException{
         authMap.put(auth.getAuth(), auth);
     }

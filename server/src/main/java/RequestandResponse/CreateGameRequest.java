@@ -1,13 +1,13 @@
 package RequestandResponse;
 public class CreateGameRequest {
-    public CreateGameRequest(String name){
-        this.name = name;
+    public CreateGameRequest(String gameName){
+        this.gameName = gameName;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String gameName) {
+        this.gameName = gameName;
     }
     public String getName() {
-        return name;
+        return gameName;
     }
-    private String name;
+    private String gameName;
 }

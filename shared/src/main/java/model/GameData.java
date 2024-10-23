@@ -5,17 +5,17 @@ public class GameData implements Comparable{
     private ChessGame game;
     private String gameName;
     private int gameID;
-    private String blackName;
-    private String whiteName;
+    private String blackUsername;
+    private String whiteUsername;
 
     //Put in placeholder methods for lower parameters
     public GameData(){}
-    public GameData(int gameID, String blackName, String whiteName, String gameName, ChessGame game) {
+    public GameData(int gameID, String blackUsername, String whiteUsername, String gameName, ChessGame game) {
         this.gameID = gameID;
         this.gameName = gameName;
         this.game = game;
-        this.blackName = blackName;
-        this.whiteName = whiteName;
+        this.blackUsername = blackUsername;
+        this.whiteUsername = whiteUsername;
     }
     public int getID(){
         return gameID;
@@ -23,17 +23,17 @@ public class GameData implements Comparable{
     public void setID(int gameID){
         this.gameID = gameID;
     }
-    public String getBlackName(){
-        return blackName;
+    public String getBlackUsername(){
+        return blackUsername;
     }
-    public void setBlackName(String blackName){
-        this.blackName = blackName;
+    public void setBlackUsername(String blackUsername){
+        this.blackUsername = blackUsername;
     }
-    public String getWhiteName(){
-        return whiteName;
+    public String getWhiteUsername(){
+        return whiteUsername;
     }
-    public void setWhiteName(String whiteName){
-        this.whiteName = whiteName;
+    public void setWhiteUsername(String whiteUsername){
+        this.whiteUsername = whiteUsername;
     }
     public String getGameName(){
         return gameName;
@@ -52,11 +52,11 @@ public class GameData implements Comparable{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GameData gameData = (GameData) o;
-        return gameID == gameData.gameID && Objects.equals(blackName, gameData.blackName) && Objects.equals(whiteName, gameData.whiteName) && Objects.equals(gameName, gameData.gameName) && Objects.equals(game, gameData.game);
+        return gameID == gameData.gameID && Objects.equals(blackUsername, gameData.blackUsername) && Objects.equals(whiteUsername, gameData.whiteUsername) && Objects.equals(gameName, gameData.gameName) && Objects.equals(game, gameData.game);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(gameID, whiteName, blackName, gameName);
+        return Objects.hash(gameID, whiteUsername, blackUsername, gameName);
     }
     @Override
     public int compareTo(Object o) {

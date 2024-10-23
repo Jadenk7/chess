@@ -6,8 +6,8 @@ public class ListGamesResponse {
     public ListGamesResponse(String message){
         this.message = message;
     }
-    public ListGamesResponse(String message, Collection<GameData> gameList){
-        this.gameList = gameList;
+    public ListGamesResponse(String message, Collection<GameData> games){
+        this.games = games;
         this.message = message;
     }
     public void setMessage(String message) {
@@ -16,12 +16,12 @@ public class ListGamesResponse {
     public String getMessage() {
         return message;
     }
-    public void setGameList(Collection<GameData> gameList) {
-        this.gameList = gameList;
+    public void setGames(Collection<GameData> games) {
+        this.games = games;
     }
-    public Collection<GameData> getGameList() {
-        return gameList;
+    public Collection<GameData> getGames() {
+        return games;
     }
-    private Collection<GameData> gameList;
+    private Collection<GameData> games;
     private String message;
 }

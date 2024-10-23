@@ -5,8 +5,8 @@ import java.lang.*;
 import model.*;
 
 public class GameDAO {
-    private HashMap<Integer, GameData> gameMap = new HashMap<>();
-    private int idInstancer = 1;
+    private static HashMap<Integer, GameData> gameMap = new HashMap<>();
+    private static int idInstancer = 1;
     public int createGame(GameData game) throws DataAccessException{
         game.setID(idInstancer);
         gameMap.put(idInstancer, game);
@@ -26,14 +26,11 @@ public class GameDAO {
     }
     public void playerNamer(String username, int gameID, ChessGame.TeamColor color) throws DataAccessException{
         GameData game = gameMap.get(gameID);
-        if (game == null) {
-            throw new DataAccessException("Game ID not found: " + gameID);
-        }
         if(color == ChessGame.TeamColor.WHITE){
-            game.setWhiteName(username);
+            game.setWhiteUsername(username);
         }
         else{
-            game.setBlackName(username);
+            game.setBlackUsername(username);
         }
 
     }
