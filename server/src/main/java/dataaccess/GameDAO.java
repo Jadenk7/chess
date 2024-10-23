@@ -5,13 +5,12 @@ import java.lang.*;
 import model.*;
 
 public class GameDAO {
-    private static HashMap<Integer, GameData> gameMap = new HashMap<>();
-    private static int idInstancer = 1;
+    private HashMap<Integer, GameData> gameMap = new HashMap<>();
+    private int idInstancer = 1;
     public int createGame(GameData game) throws DataAccessException{
         game.setID(idInstancer);
-        idInstancer += 1;
         gameMap.put(idInstancer, game);
-        return idInstancer;
+        return idInstancer++;
     }
     public GameData returnGame(int gameID) throws DataAccessException{
         return gameMap.get(gameID);
@@ -27,6 +26,9 @@ public class GameDAO {
     }
     public void playerNamer(String username, int gameID, ChessGame.TeamColor color) throws DataAccessException{
         GameData game = gameMap.get(gameID);
+        if (game == null) {
+            throw new DataAccessException("Game ID not found: " + gameID);
+        }
         if(color == ChessGame.TeamColor.WHITE){
             game.setWhiteName(username);
         }
