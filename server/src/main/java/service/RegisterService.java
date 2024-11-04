@@ -18,7 +18,7 @@ public class RegisterService {
             UserData thisUser = new UserData(req.getName(), req.getPassword(), req.getEmail());
             user.createUser(thisUser);
             String tok = UUID.randomUUID().toString();
-            auth.createToken(new AuthData(tok, req.getName()));
+            auth.createToken(new AuthData(tok, req.getName()).getAuth(), req.getName());
             return new RegResponse(req.getName(), tok);
         }
         catch(Exception exception){

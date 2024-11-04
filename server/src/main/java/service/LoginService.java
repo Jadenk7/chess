@@ -4,20 +4,29 @@ import model.*;
 import RequestandResponse.LoginResponse;
 import RequestandResponse.LoginRequest;
 import java.util.UUID;
+import java.sql.*;
 public class LoginService {
     private AuthDAO authDAO = new AuthDAO();
     private UserDAO userDAO = new UserDAO();
+    private DatabaseManager dbMan = new DatabaseManager();
+    private Connection connection;
+
+    public LoginService() {
+        try {
+            Connection conn = dbMan.getConnection();
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
     public LoginResponse logger(LoginRequest request) {
         try{
             if(request.getName() != null && request.getPassword() != null){
                 UserData thisUser = userDAO.returnUser(request.getName());
-                if (thisUser == null){
-                    return new LoginResponse("Error! Wrong password");
-                }
-                if (thisUser.getPassword().equals(request.getPassword())) {
-                    String Tokenize = UUID.randomUUID().toString();
-                    authDAO.createToken(new AuthData(Tokenize, request.getName()));
-                    return new LoginResponse(request.getName(), Tokenize);
+                if (thisUser == null && thisUser.getPassword().equals(request.getPassword())){
+                    String authToken = UUID.randomUUID().toString();
+                    authDAO.createToken(new AuthData(authToken, request.getName()).getAuth(), request.getName());
+                    return new LoginResponse(request.getName(), authToken);
                 }
                 else{
                     return new LoginResponse("Error! Wrong password");
