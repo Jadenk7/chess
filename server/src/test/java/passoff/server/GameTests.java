@@ -109,4 +109,36 @@ public class GameTests {
             throw new RuntimeException(exception);
         }
     }
+
+    @Test
+    public void playerNamerPassTest(){
+        try {
+            int jadenId = myGame.createGame("Jaden's Game");
+            String username = "Jadenizer";
+            myGame.playerNamer(username, jadenId, ChessGame.TeamColor.WHITE);
+            GameData jadenGame = myGame.returnGame(jadenId);
+            assertEquals(username, jadenGame.getWhiteUsername());
+            assertNotNull(jadenGame);
+            myGame.playerNamer(username, jadenId, ChessGame.TeamColor.BLACK);
+            jadenGame = myGame.returnGame(jadenId);
+            assertEquals(username, jadenGame.getBlackUsername());
+            assertNotNull(jadenGame);
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+    @Test
+    public void playerNamerFailTest() {
+        try {
+            int JadenId = myGame.createGame("Jaden's Game");
+            String jadenUsername = "Jadenizer";
+            String jonahUsername = "Jo Bro";
+            myGame.playerNamer(jadenUsername, JadenId, ChessGame.TeamColor.WHITE);
+            assertThrows(DataAccessException.class, () -> myGame.playerNamer(jonahUsername, JadenId, ChessGame.TeamColor.WHITE));
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 }

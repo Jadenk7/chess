@@ -104,13 +104,40 @@ public class GameDAO {
         }
     }
     public void playerNamer(String username, int gameID, ChessGame.TeamColor color) throws DataAccessException {
-        GameData game = gameMap.get(gameID);
-        if (color == ChessGame.TeamColor.WHITE) {
-            game.setWhiteUsername(username);
-        } else {
-            game.setBlackUsername(username);
+        Connection connection = dbMan.getConnection();
+        var thisGame = returnGame(gameID);
+        if (color == ChessGame.TeamColor.BLACK) {
+            if(thisGame.getBlackUsername() != null){
+                throw new DataAccessException("Nope. Taken");
+            }
+            try (var prepStatement = connection.prepareStatement("UPDATE game SET blackUsername=? WHERE gameID=?")) {
+                prepStatement.setInt(2, gameID);
+                prepStatement.setString(1, username);
+                prepStatement.executeUpdate();
+            }
+            catch (SQLException exception) {
+                throw new DataAccessException(exception.getMessage());
+            }
+            finally {
+                dbMan.closeConnection(connection);
+            }
         }
-
+        else {
+            if(thisGame.getWhiteUsername() != null){
+                throw new DataAccessException("Nope. Taken");
+            }
+            try (var prepStatement = connection.prepareStatement("UPDATE game SET whiteUsername = ? WHERE gameID = ?")) {
+                prepStatement.setInt(2, gameID);
+                prepStatement.setString(1, username);
+                prepStatement.executeUpdate();
+            }
+            catch (SQLException exception) {
+                throw new DataAccessException(exception.getMessage());
+            }
+            finally {
+                dbMan.closeConnection(connection);
+            }
+        }
     }
     public void delete(int gameID) throws DataAccessException{
         gameMap.remove(gameID);
