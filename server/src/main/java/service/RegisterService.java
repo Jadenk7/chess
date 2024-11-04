@@ -16,7 +16,7 @@ public class RegisterService {
                 return new RegResponse("Error! Fill all required fields!");
             }
             UserData thisUser = new UserData(req.getName(), req.getPassword(), req.getEmail());
-            user.createUser(thisUser);
+            user.createUser(thisUser.getName(), thisUser.getPassword(), thisUser.getEmail());
             String tok = UUID.randomUUID().toString();
             auth.createToken(new AuthData(tok, req.getName()).getAuth(), req.getName());
             return new RegResponse(req.getName(), tok);

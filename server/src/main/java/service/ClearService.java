@@ -11,7 +11,7 @@ public class ClearService {
         AuthDAO auth = new AuthDAO();
         try (Connection connection = new DatabaseManager().getConnection()) {
             game.clear(connection);
-            user.clear();
+            user.clear(connection);
             auth.clear(connection);
         }
         catch (DataAccessException | SQLException exception) {
