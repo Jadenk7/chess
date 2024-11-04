@@ -96,5 +96,37 @@ public class AuthTests {
             myAuth.delete(myCred.getAuth());
         });
     }
+    @Test
+    public void readingTest(){
+        AuthData myCred = new AuthData("EarthboundRules4", "Jadenizer");
+        try {
+            myAuth.createToken(myCred.getAuth(), myCred.getName());
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        AuthData placeholder = null;
+        try {
+            placeholder = myAuth.returnToken(myCred.getAuth());
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        assertEquals(myCred.getAuth(), placeholder.getAuth());
+        assertEquals(myCred.getName(), placeholder.getName());
+    }
+
+    @Test
+    public void antiReadingTest(){
+        AuthData myCred = new AuthData("EarthboundRules4", "Jadenizer");
+        AuthData placeholder = null;
+        try {
+            placeholder = myAuth.returnToken(myCred.getAuth());
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        assertEquals(null, placeholder);
+    }
 }
 
