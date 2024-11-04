@@ -38,90 +38,82 @@ public class GameDAO {
         }
     }
     public GameData returnGame(int gameID) throws DataAccessException{
-        Connection connection = DatabaseManager.getConnection();
-        try (var prepStatement = connection.prepareStatement("SELECT* FROM game WHERE gameID=?")) {
-            prepStatement.setInt(1, gameID);
-            try (var rs = prepStatement.executeQuery()) {
-                if (rs.next()) {
-                    var json = rs.getString("game");
-                    gameID = rs.getInt("gameID");
-                    var gameName = rs.getString("gameName");
-                    var blackUsername = rs.getString("blackUsername");
-                    var whiteUsername = rs.getString("whiteUsername");
-                    var game = new Gson().fromJson(json, ChessGame.class);
-                    return new GameData(gameID, blackUsername, whiteUsername, gameName, game);
-                }
-                else{
-                    return null;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("SELECT* FROM game WHERE gameID=?")) {
+                prepStatement.setInt(1, gameID);
+                try (var rs = prepStatement.executeQuery()) {
+                    if (rs.next()) {
+                        var json = rs.getString("game");
+                        gameID = rs.getInt("gameID");
+                        var gameName = rs.getString("gameName");
+                        var blackUsername = rs.getString("blackUsername");
+                        var whiteUsername = rs.getString("whiteUsername");
+                        var game = new Gson().fromJson(json, ChessGame.class);
+                        return new GameData(gameID, blackUsername, whiteUsername, gameName, game);
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
         catch(SQLException exception){
             throw new DataAccessException(exception.getMessage());
-        }
-        finally{
-            DatabaseManager.closeConnection(connection);
         }
     }
     public Collection<GameData> returnGameMap() throws DataAccessException{
         Collection<GameData> gameArrays  = new ArrayList<>();
-        Connection connection = DatabaseManager.getConnection();
-        try (var prepStatement = connection.prepareStatement("SELECT* FROM Game")) {
-            try (var rs = prepStatement.executeQuery()) {
-                while (rs.next()) {
-                    var json = rs.getString("game");
-                    var gameID = rs.getInt("gameID");
-                    var gameName = rs.getString("gameName");
-                    var blackUsername = rs.getString("blackUsername");
-                    var whiteUsername = rs.getString("whiteUsername");
-                    var assembler = new GsonBuilder();
-                    var game = assembler.create().fromJson(json, ChessGame.class);
-                    GameData updatedGame = new GameData(gameID, blackUsername, whiteUsername, gameName, game);
-                    gameArrays.add(updatedGame);
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("SELECT* FROM Game")) {
+                try (var rs = prepStatement.executeQuery()) {
+                    while (rs.next()) {
+                        var json = rs.getString("game");
+                        var gameID = rs.getInt("gameID");
+                        var gameName = rs.getString("gameName");
+                        var blackUsername = rs.getString("blackUsername");
+                        var whiteUsername = rs.getString("whiteUsername");
+                        var assembler = new GsonBuilder();
+                        var game = assembler.create().fromJson(json, ChessGame.class);
+                        GameData updatedGame = new GameData(gameID, blackUsername, whiteUsername, gameName, game);
+                        gameArrays.add(updatedGame);
+                    }
+                    return gameArrays;
                 }
-                return gameArrays;
             }
         }
         catch(SQLException exception){
             throw new DataAccessException(exception.getMessage());
         }
-        finally{
-            DatabaseManager.closeConnection(connection);
-        }
     }
     public void playerNamer(String username, int gameID, ChessGame.TeamColor color) throws DataAccessException {
-        Connection connection = DatabaseManager.getConnection();
         var thisGame = returnGame(gameID);
         if (color == ChessGame.TeamColor.BLACK) {
             if(thisGame.getBlackUsername() != null){
                 throw new DataAccessException("Nope. Taken");
             }
-            try (var prepStatement = connection.prepareStatement("UPDATE game SET blackUsername=? WHERE gameID=?")) {
-                prepStatement.setInt(2, gameID);
-                prepStatement.setString(1, username);
-                prepStatement.executeUpdate();
+            try (Connection connection = DatabaseManager.getConnection()) {
+                try (var prepStatement = connection.prepareStatement("UPDATE game SET blackUsername=? WHERE gameID=?")) {
+                    prepStatement.setInt(2, gameID);
+                    prepStatement.setString(1, username);
+                    prepStatement.executeUpdate();
+                }
             }
             catch (SQLException exception) {
                 throw new DataAccessException(exception.getMessage());
-            }
-            finally {
-                DatabaseManager.closeConnection(connection);
             }
         }
         else {
             if(thisGame.getWhiteUsername() != null){
                 throw new DataAccessException("Nope. Taken");
             }
-            try (var prepStatement = connection.prepareStatement("UPDATE game SET whiteUsername = ? WHERE gameID = ?")) {
-                prepStatement.setInt(2, gameID);
-                prepStatement.setString(1, username);
-                prepStatement.executeUpdate();
+            try (Connection connection = DatabaseManager.getConnection()) {
+                try (var prepStatement = connection.prepareStatement("UPDATE game SET whiteUsername = ? WHERE gameID = ?")) {
+                    prepStatement.setInt(2, gameID);
+                    prepStatement.setString(1, username);
+                    prepStatement.executeUpdate();
+                }
             }
             catch (SQLException exception) {
                 throw new DataAccessException(exception.getMessage());
-            }
-            finally {
-                DatabaseManager.closeConnection(connection);
             }
         }
     }

@@ -27,15 +27,15 @@ public class AuthDAO {
         }
     }
     public void createToken(String authToken, String username) throws DataAccessException {
-        Connection connection = DatabaseManager.getConnection();
-        try (var prepStatement = connection.prepareStatement("INSERT INTO authtoken (authToken, username) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
-            prepStatement.setString(1, authToken);
-            prepStatement.setString(2, username);
-            prepStatement.executeUpdate();
-        } catch (SQLException exception) {
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("INSERT INTO authtoken (authToken, username) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
+                prepStatement.setString(1, authToken);
+                prepStatement.setString(2, username);
+                prepStatement.executeUpdate();
+            }
+        }
+        catch (SQLException exception) {
             throw new DataAccessException(exception.getMessage());
-        } finally {
-            DatabaseManager.closeConnection(connection);
         }
     }
     public void clear(Connection conn) throws DataAccessException {
@@ -46,14 +46,14 @@ public class AuthDAO {
         }
     }
     public void delete(String authToken) throws DataAccessException {
-        Connection connection = DatabaseManager.getConnection();
-        try (var prepStatement = connection.prepareStatement("DELETE FROM authtoken WHERE authToken=?")) {
-            prepStatement.setString(1, authToken);
-            prepStatement.executeUpdate();
-        } catch (SQLException exception) {
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("DELETE FROM authtoken WHERE authToken=?")) {
+                prepStatement.setString(1, authToken);
+                prepStatement.executeUpdate();
+            }
+        }
+        catch (SQLException exception) {
             throw new DataAccessException(exception.getMessage());
-        } finally {
-            DatabaseManager.closeConnection(connection);
         }
     }
 }

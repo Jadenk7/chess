@@ -22,26 +22,23 @@ public class UserDAO {
 
     }
     public UserData returnUser(String username) throws DataAccessException{
-        Connection connection = DatabaseManager.getConnection();
-        try (var prepStatement = connection.prepareStatement("SELECT* FROM user WHERE username=?")) {
-            prepStatement.setString(1, username);
-            try (var rs = prepStatement.executeQuery()) {
-                if (rs.next()) {
-                    username = rs.getString("username");
-                    var password = rs.getString("password");
-                    var email = rs.getString("email");
-                    return new UserData(username, password, email);
-                }
-                else{
-                    return null;
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("SELECT* FROM user WHERE username=?")) {
+                prepStatement.setString(1, username);
+                try (var rs = prepStatement.executeQuery()) {
+                    if (rs.next()) {
+                        username = rs.getString("username");
+                        var password = rs.getString("password");
+                        var email = rs.getString("email");
+                        return new UserData(username, password, email);
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
         catch(SQLException exception){
             throw new DataAccessException(exception.getMessage());
-        }
-        finally{
-            DatabaseManager.closeConnection(connection);
         }
     }
     public void clear(Connection connection) throws DataAccessException{
