@@ -72,7 +72,30 @@ public class GameDAO {
         }
     }
     public Collection<GameData> returnGameMap() throws DataAccessException{
-        return gameMap.values();
+        Collection<GameData> gameArrays  = new ArrayList<>();
+        Connection connection = dbMan.getConnection();
+        try (var prepStatement = connection.prepareStatement("SELECT* FROM Game")) {
+            try (var rs = prepStatement.executeQuery()) {
+                while (rs.next()) {
+                    var json = rs.getString("game");
+                    var gameID = rs.getInt("gameID");
+                    var gameName = rs.getString("gameName");
+                    var blackUsername = rs.getString("blackUsername");
+                    var whiteUsername = rs.getString("whiteUsername");
+                    var assembler = new GsonBuilder();
+                    var game = assembler.create().fromJson(json, ChessGame.class);
+                    GameData updatedGame = new GameData(gameID, blackUsername, whiteUsername, gameName, game);
+                    gameArrays.add(updatedGame);
+                }
+                return gameArrays;
+            }
+        }
+        catch(SQLException exception){
+            throw new DataAccessException(exception.getMessage());
+        }
+        finally{
+            dbMan.closeConnection(connection);
+        }
     }
     public void updateGame(GameData game) throws DataAccessException{
         int thisID = game.getID();

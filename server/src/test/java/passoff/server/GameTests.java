@@ -80,5 +80,33 @@ public class GameTests {
             throw new RuntimeException(exception);
         }
     }
+    @Test
+    public void readGamesTest() {
+        try {
+            myGame.createGame("Mario");
+            myGame.createGame("Luigi");
+            myGame.createGame("Donkey Kong Too");
+            Collection<GameData> gameMap = myGame.returnGameMap();
+            assertFalse(gameMap.isEmpty());
+            assertNotNull(gameMap);
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 
+    @Test
+    public void cantReadGamesTest(){
+        try {
+            Connection connection = new DatabaseManager().getConnection();
+            myGame.clear(connection);
+            connection.close();
+            Collection<GameData> gameMap = myGame.returnGameMap();
+            assertTrue(gameMap.isEmpty());
+            assertNotNull(gameMap);
+        }
+        catch (DataAccessException | SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
 }
