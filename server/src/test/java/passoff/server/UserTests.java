@@ -45,4 +45,27 @@ public class UserTests {
         }
         assertEquals(null, placeholder);
     }
+    @Test
+    public void userCreationTest(){
+        UserData jadenCred =  new UserData("Jadenizer" , "Earthbounder4", "kunzlerj9@gmail.com");
+        try{
+            myUser.createUser(jadenCred.getName(), jadenCred.getPassword(), jadenCred.getEmail());
+        }
+        catch(DataAccessException exception){
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Test
+    public void dittoUsernameTest(){
+        UserData jadenCred =  new UserData("Jadenizer" , "Earthbounder4", "kunzlerj9@gmail.com");
+        try{
+            myUser.createUser(jadenCred.getName(), jadenCred.getPassword(), jadenCred.getEmail());
+        }
+        catch(DataAccessException exception){
+            throw new RuntimeException(exception);
+        }
+        UserData dittoUsername = new UserData("Jadenizer", "EarthboundRules", "jadenizer@gmail.com");
+        assertThrows(DataAccessException.class, () -> {myUser.createUser(dittoUsername.getName(), dittoUsername.getPassword(), dittoUsername.getEmail());});
+    }
 }
