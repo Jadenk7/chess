@@ -37,8 +37,8 @@ public class UserDAO {
                 }
             }
         }
-        catch(SQLException e){
-            throw new DataAccessException(e.getMessage());
+        catch(SQLException exception){
+            throw new DataAccessException(exception.getMessage());
         }
         finally{
             DatabaseManager.closeConnection(connection);

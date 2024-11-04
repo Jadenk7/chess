@@ -23,7 +23,7 @@ public class LoginService {
         try{
             if(request.getName() != null && request.getPassword() != null){
                 UserData thisUser = userDAO.returnUser(request.getName());
-                if (thisUser == null && thisUser.getPassword().equals(request.getPassword())){
+                if (thisUser != null && thisUser.getPassword().equals(request.getPassword())){
                     String authToken = UUID.randomUUID().toString();
                     authDAO.createToken(new AuthData(authToken, request.getName()).getAuth(), request.getName());
                     return new LoginResponse(request.getName(), authToken);
