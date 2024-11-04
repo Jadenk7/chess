@@ -10,7 +10,7 @@ public class ClearService {
         UserDAO user = new UserDAO();
         AuthDAO auth = new AuthDAO();
         try (Connection connection = new DatabaseManager().getConnection()) {
-            game.clear();
+            game.clear(connection);
             user.clear();
             auth.clear(connection);
         }
