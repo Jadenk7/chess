@@ -25,7 +25,27 @@ public class UserDAO {
         }
     }
     public UserData returnUser(String username) throws DataAccessException{
-        return userMap.get(username);
+        Connection connection = dbMan.getConnection();
+        try (var prepStatement = connection.prepareStatement("SELECT* FROM user WHERE username=?")) {
+            prepStatement.setString(1, username);
+            try (var rs = prepStatement.executeQuery()) {
+                if (rs.next()) {
+                    username = rs.getString("username");
+                    var password = rs.getString("password");
+                    var email = rs.getString("email");
+                    return new UserData(username, password, email);
+                }
+                else{
+                    return null;
+                }
+            }
+        }
+        catch(SQLException e){
+            throw new DataAccessException(e.getMessage());
+        }
+        finally{
+            dbMan.closeConnection(connection);
+        }
     }
     public void clear(Connection connection) throws DataAccessException{
         try (var prepStatement = connection.prepareStatement("DELETE FROM user")) {

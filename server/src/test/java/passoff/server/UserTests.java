@@ -68,4 +68,38 @@ public class UserTests {
         UserData dittoUsername = new UserData("Jadenizer", "EarthboundRules", "jadenizer@gmail.com");
         assertThrows(DataAccessException.class, () -> {myUser.createUser(dittoUsername.getName(), dittoUsername.getPassword(), dittoUsername.getEmail());});
     }
+    @Test
+    public void returnUserTest(){
+        UserData jadenCred =  new UserData("Jadenizer" , "Earthbounder4", "kunzlerj9@gmail.com");
+        try {
+            myUser.createUser(jadenCred.getName(), jadenCred.getPassword(), jadenCred.getEmail());
+            UserData thisUser = myUser.returnUser(jadenCred.getName());
+            assertNotNull(thisUser, "null");
+            assertEquals(jadenCred.getName(), thisUser.getName(), "Usernames unmatched");
+            assertEquals(jadenCred.getPassword(), thisUser.getPassword(), "Passwords unmatched");
+            assertEquals(jadenCred.getEmail(), thisUser.getEmail(), "Emails unmatched");
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Test
+    public void returnUserNonTest(){
+        UserData jadenCred =  new UserData("Jadenizer" , "Earthbounder4", "kunzlerj9@gmail.com");
+        try {
+            myUser.createUser(jadenCred.getName(), jadenCred.getPassword(), jadenCred.getEmail());
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        UserData placeholder = null;
+        try {
+            placeholder = myUser.returnUser(jadenCred.getName());
+        }
+        catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        assertEquals(jadenCred.getName(), placeholder.getName());
+    }
 }
