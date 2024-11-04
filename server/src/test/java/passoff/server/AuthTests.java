@@ -43,4 +43,26 @@ public class AuthTests {
         }
         assertEquals(null, retrievedToken);
     }
+    @Test
+    public void createAuthTest(){
+        AuthData myCred =  new AuthData("EarthboundRules4", "Jadenizer");
+        try{
+            myAuth.createToken(myCred.getAuth(), myCred.getName());
+        }
+        catch(DataAccessException exception){
+            throw new RuntimeException(exception);
+        }
+    }
+    @Test
+    public void unableCreateDitto(){
+        AuthData myCred =  new AuthData("EarthboundRules4", "Jadenizer");
+        try{
+            myAuth.createToken(myCred.getAuth(), myCred.getName());
+        }
+        catch(DataAccessException exception){
+            throw new RuntimeException(exception);
+        }
+        AuthData ditto = new AuthData("EarthboundRules4", "Jadenizer");
+        assertThrows(DataAccessException.class, () -> {myAuth.createToken(ditto.getAuth(), ditto.getName());});
+    }
 }
