@@ -11,7 +11,7 @@ public class CreateGameService {
             if(request.getName() == null){
                 return new CreateGameResponse("Error! No name");
             }
-            if(auth.getTokens().isEmpty()) {
+            if(auth.returnToken(authToken) == null) {
                 return new CreateGameResponse("Error! Need authorization");
             }
             GameData game = new GameData();

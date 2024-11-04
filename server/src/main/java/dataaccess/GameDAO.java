@@ -11,11 +11,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class GameDAO {
-    private static HashMap<Integer, GameData> gameMap = new HashMap<>();
-    private static int idInstancer = 1;
-
-    private DatabaseManager dbMan = new DatabaseManager();
-
     public void clear(Connection connection) throws DataAccessException {
         try (var prepStatement = connection.prepareStatement("DELETE FROM game")) {
             prepStatement.executeUpdate();
@@ -25,27 +20,25 @@ public class GameDAO {
         }
     }
     public int createGame(String gameName) throws DataAccessException {
-        Connection connection = dbMan.getConnection();
-        try (var prepStatement = connection.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
-            prepStatement.setString(1, gameName);
-            prepStatement.setString(2,  new Gson().toJson(new ChessGame()));
-            prepStatement.executeUpdate();
-            var gameID = 0;
-            var resSet = prepStatement.getGeneratedKeys();
-            if (resSet.next()) {
-                gameID = resSet.getInt(1);
+        try (Connection connection = DatabaseManager.getConnection()) {
+            try (var prepStatement = connection.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
+                prepStatement.setString(1, gameName);
+                prepStatement.setString(2, new Gson().toJson(new ChessGame()));
+                prepStatement.executeUpdate();
+                var gameID = 0;
+                var resSet = prepStatement.getGeneratedKeys();
+                if (resSet.next()) {
+                    gameID = resSet.getInt(1);
+                }
+                return gameID;
             }
-            return gameID;
         }
         catch(SQLException exception){
             throw new DataAccessException(exception.getMessage());
         }
-        finally{
-            dbMan.closeConnection(connection);
-        }
     }
     public GameData returnGame(int gameID) throws DataAccessException{
-        Connection connection = dbMan.getConnection();
+        Connection connection = DatabaseManager.getConnection();
         try (var prepStatement = connection.prepareStatement("SELECT* FROM game WHERE gameID=?")) {
             prepStatement.setInt(1, gameID);
             try (var rs = prepStatement.executeQuery()) {
@@ -55,8 +48,7 @@ public class GameDAO {
                     var gameName = rs.getString("gameName");
                     var blackUsername = rs.getString("blackUsername");
                     var whiteUsername = rs.getString("whiteUsername");
-                    var assembler = new GsonBuilder();
-                    var game = assembler.create().fromJson(json, ChessGame.class);
+                    var game = new Gson().fromJson(json, ChessGame.class);
                     return new GameData(gameID, blackUsername, whiteUsername, gameName, game);
                 }
                 else{
@@ -68,12 +60,12 @@ public class GameDAO {
             throw new DataAccessException(exception.getMessage());
         }
         finally{
-            dbMan.closeConnection(connection);
+            DatabaseManager.closeConnection(connection);
         }
     }
     public Collection<GameData> returnGameMap() throws DataAccessException{
         Collection<GameData> gameArrays  = new ArrayList<>();
-        Connection connection = dbMan.getConnection();
+        Connection connection = DatabaseManager.getConnection();
         try (var prepStatement = connection.prepareStatement("SELECT* FROM Game")) {
             try (var rs = prepStatement.executeQuery()) {
                 while (rs.next()) {
@@ -94,17 +86,11 @@ public class GameDAO {
             throw new DataAccessException(exception.getMessage());
         }
         finally{
-            dbMan.closeConnection(connection);
-        }
-    }
-    public void updateGame(GameData game) throws DataAccessException{
-        int thisID = game.getID();
-        if(gameMap.containsKey(thisID)){
-            gameMap.put(thisID, game);
+            DatabaseManager.closeConnection(connection);
         }
     }
     public void playerNamer(String username, int gameID, ChessGame.TeamColor color) throws DataAccessException {
-        Connection connection = dbMan.getConnection();
+        Connection connection = DatabaseManager.getConnection();
         var thisGame = returnGame(gameID);
         if (color == ChessGame.TeamColor.BLACK) {
             if(thisGame.getBlackUsername() != null){
@@ -119,7 +105,7 @@ public class GameDAO {
                 throw new DataAccessException(exception.getMessage());
             }
             finally {
-                dbMan.closeConnection(connection);
+                DatabaseManager.closeConnection(connection);
             }
         }
         else {
@@ -135,13 +121,8 @@ public class GameDAO {
                 throw new DataAccessException(exception.getMessage());
             }
             finally {
-                dbMan.closeConnection(connection);
+                DatabaseManager.closeConnection(connection);
             }
         }
     }
-    public void delete(int gameID) throws DataAccessException{
-        gameMap.remove(gameID);
-    }
-
-
 }
