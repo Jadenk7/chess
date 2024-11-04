@@ -65,4 +65,36 @@ public class AuthTests {
         AuthData ditto = new AuthData("EarthboundRules4", "Jadenizer");
         assertThrows(DataAccessException.class, () -> {myAuth.createToken(ditto.getAuth(), ditto.getName());});
     }
+    @Test
+    public void deletionTest(){
+        AuthData myCred = new AuthData("EarthboundRules4", "Jadenizer");
+        try {
+            myAuth.createToken(myCred.getAuth(), myCred.getName());
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        try {
+            myAuth.delete(myCred.getAuth());
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+
+        AuthData placeholder = null;
+        try {
+            placeholder = myAuth.returnToken(myCred.getAuth());
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+        assertEquals(null, placeholder);
+    }
+
+    @Test
+    public void cantDelete() {
+        AuthData myCred = new AuthData(null, null);
+        assertDoesNotThrow(() -> {
+            myAuth.delete(myCred.getAuth());
+        });
+    }
 }
+
