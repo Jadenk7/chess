@@ -57,4 +57,28 @@ public class GameTests {
             throw new RuntimeException(exception);
         }
     }
+    @Test
+    public void readGameTest(){
+        try {
+            GameData reading = myGame.returnGame(myGame.createGame("NameOGame"));
+            assertNotNull(reading);
+        } catch (DataAccessException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    @Test
+    public void cantReadGameTest(){
+        try {
+            Connection connection = new DatabaseManager().getConnection();
+            myGame.clear(connection);
+            connection.close();
+            GameData game = myGame.returnGame(myGame.createGame("NameOGame"));
+            assertNotNull(game);
+        }
+        catch (DataAccessException | SQLException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
 }
