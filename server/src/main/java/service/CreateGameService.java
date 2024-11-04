@@ -16,7 +16,7 @@ public class CreateGameService {
             }
             GameData game = new GameData();
             game.setGameName(request.getName());
-            int id = this.gameDA.createGame(game);
+            int id = gameDA.createGame(request.getName());
             game.setID(id);
             return new CreateGameResponse(id);
         }

@@ -24,10 +24,25 @@ public class GameDAO {
             throw new DataAccessException(exception.getMessage());
         }
     }
-    public int createGame(GameData game) throws DataAccessException{
-        game.setID(idInstancer);
-        gameMap.put(idInstancer, game);
-        return idInstancer++;
+    public int createGame(String gameName) throws DataAccessException {
+        Connection connection = dbMan.getConnection();
+        try (var prepStatement = connection.prepareStatement("INSERT INTO game (gameName, game) VALUES(?, ?)", RETURN_GENERATED_KEYS)) {
+            prepStatement.setString(1, gameName);
+            prepStatement.setString(2,  new Gson().toJson(new ChessGame()));
+            prepStatement.executeUpdate();
+            var gameID = 0;
+            var resSet = prepStatement.getGeneratedKeys();
+            if (resSet.next()) {
+                gameID = resSet.getInt(1);
+            }
+            return gameID;
+        }
+        catch(SQLException exception){
+            throw new DataAccessException(exception.getMessage());
+        }
+        finally{
+            dbMan.closeConnection(connection);
+        }
     }
     public GameData returnGame(int gameID) throws DataAccessException{
         return gameMap.get(gameID);
