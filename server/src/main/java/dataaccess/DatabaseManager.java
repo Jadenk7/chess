@@ -69,14 +69,4 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
-
-    static void closeConnection(Connection conn) throws DataAccessException {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException exception) {
-                throw new DataAccessException(exception.getMessage());
-            }
-        }
-    }
 }

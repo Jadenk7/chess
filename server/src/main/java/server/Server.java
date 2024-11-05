@@ -4,10 +4,16 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import server.handler.*;
 import spark.*;
-
 import java.sql.*;
 
 public class Server {
+    public Server(){
+        try {
+            configureDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS `authtoken` (
@@ -49,11 +55,6 @@ public class Server {
         }
     }
     public int run(int desiredPort) {
-        try {
-            configureDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
         // Register your endpoints and handle exceptions here.
