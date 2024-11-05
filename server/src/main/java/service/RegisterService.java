@@ -4,6 +4,7 @@ import RequestandResponse.RegResponse;
 import RequestandResponse.RegRequest;
 import dataaccess.*;
 import model.*;
+import org.mindrot.jbcrypt.*;
 public class RegisterService {
     private AuthDAO auth = new AuthDAO();
     private UserDAO user = new UserDAO();
@@ -15,7 +16,9 @@ public class RegisterService {
             if(req.getName() == null || req.getPassword() == null || req.getEmail() == null){
                 return new RegResponse("Error! Fill all required fields!");
             }
-            UserData thisUser = new UserData(req.getName(), req.getPassword(), req.getEmail());
+            String hashedPassword = BCrypt.hashpw(req.getPassword(), BCrypt.gensalt());
+            //req.getPassword()
+            UserData thisUser = new UserData(req.getName(), hashedPassword, req.getEmail());
             user.createUser(thisUser.getName(), thisUser.getPassword(), thisUser.getEmail());
             String tok = UUID.randomUUID().toString();
             auth.createToken(new AuthData(tok, req.getName()).getAuth(), req.getName());

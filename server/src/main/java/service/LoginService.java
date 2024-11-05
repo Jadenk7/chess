@@ -5,6 +5,7 @@ import RequestandResponse.LoginResponse;
 import RequestandResponse.LoginRequest;
 import java.util.UUID;
 import java.sql.*;
+import org.mindrot.jbcrypt.*;
 public class LoginService {
     private AuthDAO authDAO = new AuthDAO();
     private UserDAO userDAO = new UserDAO();
@@ -23,7 +24,8 @@ public class LoginService {
         try{
             if(request.getName() != null && request.getPassword() != null){
                 UserData thisUser = userDAO.returnUser(request.getName());
-                if (thisUser != null && thisUser.getPassword().equals(request.getPassword())){
+                //if (thisUser != null && thisUser.getPassword().equals(request.getPassword())){
+                    if (thisUser != null && BCrypt.checkpw(request.getPassword(), thisUser.getPassword()) == true) {
                     String authToken = UUID.randomUUID().toString();
                     authDAO.createToken(new AuthData(authToken, request.getName()).getAuth(), request.getName());
                     return new LoginResponse(request.getName(), authToken);

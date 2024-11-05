@@ -1,14 +1,61 @@
 package server;
 
+import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import server.handler.*;
 import spark.*;
 
-public class Server {
+import java.sql.*;
 
+public class Server {
+    /*private final String[] createStatements = {
+            """
+            CREATE TABLE IF NOT EXISTS `authtoken` (
+              `authToken` varchar(45) NOT NULL,
+              `username` varchar(45) NOT NULL,
+              PRIMARY KEY (`authToken`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS `game` (
+              `blackUsername` varchar(45) DEFAULT NULL,
+              `game` blob NOT NULL,
+              `gameID` int NOT NULL AUTO_INCREMENT,
+              `gameName` varchar(45) NOT NULL,
+              `whiteUsername` varchar(45) DEFAULT NULL,
+              PRIMARY KEY (`gameID`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS `user` (
+              `email` varchar(150) NOT NULL,
+              `password` varchar(150) NOT NULL,
+              `username` varchar(150) NOT NULL,
+              PRIMARY KEY (`username`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };*/
+
+    /*private void configureDatabase() throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException(ex);
+        }
+    }*/
     public int run(int desiredPort) {
+        /*try {
+            configureDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }*/
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
-
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", new ClearHandler());
         Spark.post("/user", new RegisterHandler());
