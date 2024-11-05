@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 public class CreateGameResponse {
     public CreateGameResponse(String message){
         this.message = message;
@@ -16,8 +16,8 @@ public class CreateGameResponse {
     public String getMessage() {
         return message;
     }
-    public void setID(int ID){
-        this.gameID = ID;
+    public void setID(int id){
+        this.gameID = id;
     }
     public int getID() {
         return gameID;

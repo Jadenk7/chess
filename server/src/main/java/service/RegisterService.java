@@ -1,7 +1,7 @@
 package service;
 import java.util.UUID;
-import RequestandResponse.RegResponse;
-import RequestandResponse.RegRequest;
+import requestandresponse.RegResponse;
+import requestandresponse.RegRequest;
 import dataaccess.*;
 import model.*;
 import org.mindrot.jbcrypt.*;

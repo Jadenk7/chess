@@ -1,6 +1,6 @@
 package server.handler;
-import RequestandResponse.CreateGameRequest;
-import RequestandResponse.CreateGameResponse;
+import requestandresponse.CreateGameRequest;
+import requestandresponse.CreateGameResponse;
 import service.CreateGameService;
 import com.google.gson.*;
 import spark.*;

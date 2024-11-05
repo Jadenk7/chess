@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 public class RegRequest {
     public String getName() {
         return username;

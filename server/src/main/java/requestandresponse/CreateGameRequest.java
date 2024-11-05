@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 public class CreateGameRequest {
     public CreateGameRequest(String gameName){
         this.gameName = gameName;

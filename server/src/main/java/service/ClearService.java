@@ -1,5 +1,5 @@
 package service;
-import RequestandResponse.ClearResponse;
+import requestandresponse.ClearResponse;
 import dataaccess.*;
 import java.sql.Connection;
 import java.sql.SQLException;

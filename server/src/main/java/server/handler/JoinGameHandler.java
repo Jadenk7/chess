@@ -1,7 +1,7 @@
 package server.handler;
 import service.JoinGameService;
-import RequestandResponse.JoinGameRequest;
-import RequestandResponse.JoinGameResponse;
+import requestandresponse.JoinGameRequest;
+import requestandresponse.JoinGameResponse;
 import spark.*;
 import spark.Request;
 import spark.Response;

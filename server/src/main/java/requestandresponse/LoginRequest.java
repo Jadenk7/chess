@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 
 public class LoginRequest {
     public LoginRequest(String username, String password){

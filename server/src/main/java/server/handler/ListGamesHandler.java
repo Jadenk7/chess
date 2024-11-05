@@ -1,6 +1,6 @@
 package server.handler;
 import service.ListGamesService;
-import RequestandResponse.ListGamesResponse;
+import requestandresponse.ListGamesResponse;
 import spark.Request;
 import spark.Response;
 import spark.*;

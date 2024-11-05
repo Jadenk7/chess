@@ -1,6 +1,6 @@
 package service;
 import dataaccess.*;
-import RequestandResponse.LogoutResponse;
+import requestandresponse.LogoutResponse;
 
 public class LogoutService {
     private AuthDAO authDAO = new AuthDAO();

@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 public class LoginResponse {
     public LoginResponse() {}
     public LoginResponse(String message){

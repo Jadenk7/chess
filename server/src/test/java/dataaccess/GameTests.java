@@ -1,7 +1,5 @@
 package dataaccess;
 import model.*;
-import dataaccess.*;
-import RequestandResponse.*;
 import chess.ChessGame;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -131,11 +129,11 @@ public class GameTests {
     @Test
     public void playerNamerFailTest() {
         try {
-            int JadenId = myGame.createGame("Jaden's Game");
+            int jadenId = myGame.createGame("Jaden's Game");
             String jadenUsername = "Jadenizer";
             String jonahUsername = "Jo Bro";
-            myGame.playerNamer(jadenUsername, JadenId, ChessGame.TeamColor.WHITE);
-            assertThrows(DataAccessException.class, () -> myGame.playerNamer(jonahUsername, JadenId, ChessGame.TeamColor.WHITE));
+            myGame.playerNamer(jadenUsername, jadenId, ChessGame.TeamColor.WHITE);
+            assertThrows(DataAccessException.class, () -> myGame.playerNamer(jonahUsername, jadenId, ChessGame.TeamColor.WHITE));
         }
         catch (DataAccessException exception) {
             throw new RuntimeException(exception);

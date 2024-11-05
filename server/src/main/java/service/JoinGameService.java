@@ -2,7 +2,7 @@ package service;
 import chess.ChessGame;
 import model.*;
 import dataaccess.*;
-import RequestandResponse.*;
+import requestandresponse.*;
 public class JoinGameService {
     public JoinGameResponse joinGame(JoinGameRequest request, String authToken) {
         try {

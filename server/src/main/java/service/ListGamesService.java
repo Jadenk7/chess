@@ -1,6 +1,6 @@
 package service;
 import dataaccess.*;
-import RequestandResponse.ListGamesResponse;
+import requestandresponse.ListGamesResponse;
 public class ListGamesService {
     private AuthDAO authDAO = new AuthDAO();
     private GameDAO gameDAO = new GameDAO();

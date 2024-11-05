@@ -3,7 +3,7 @@ import spark.*;
 import spark.Request;
 import spark.Response;
 import service.LogoutService;
-import RequestandResponse.*;
+import requestandresponse.*;
 import com.google.gson.Gson;
 public class LogoutHandler implements Route{
     @Override

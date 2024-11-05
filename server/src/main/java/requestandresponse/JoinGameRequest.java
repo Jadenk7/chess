@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 import chess.ChessGame;
 public class JoinGameRequest {
     public JoinGameRequest(ChessGame.TeamColor playerColor, int gameID){

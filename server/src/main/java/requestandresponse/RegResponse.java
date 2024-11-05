@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 
 public class RegResponse {
     public RegResponse(String message) {

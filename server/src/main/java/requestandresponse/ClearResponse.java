@@ -1,4 +1,4 @@
-package RequestandResponse;
+package requestandresponse;
 
 public class ClearResponse {
     public ClearResponse(String response) {

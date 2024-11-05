@@ -80,16 +80,16 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     private Collection<ChessMove> bishopCalc(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> Possibilities = new ArrayList<>();
+        Collection<ChessMove> possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
-        int start_row = row;
-        int start_col = col;
+        int startRow = row;
+        int startCol = col;
         while (row < 9 && col < 9) {
             if (row + 1 < 9 && col + 1 < 9) {
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col + 1);
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col + 1), null));
+                    possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row + 1, col + 1), null));
                     row += 1;
                     col += 1;
                     continue;
@@ -97,7 +97,7 @@ public class ChessPiece {
                     ChessPiece myPiece = board.getPiece(position);
                     ChessPiece otherPiece = board.getPiece(aheadPosition);
                     if (myPiece.pieceColor != otherPiece.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col + 1), null));
+                        possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row + 1, col + 1), null));
                         break;
                     } else {
                         break;
@@ -107,13 +107,13 @@ public class ChessPiece {
             row += 1;
             col += 1;
         }
-        row = start_row;
-        col = start_col;
+        row = startRow;
+        col = startCol;
         while (row < 9 && 0 < col) {
             if (row + 1 < 9 && col - 1 > 0) {
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col - 1);
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col - 1), null));
+                    possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row + 1, col - 1), null));
                     row += 1;
                     col -= 1;
                     continue;
@@ -121,7 +121,7 @@ public class ChessPiece {
                     ChessPiece myPiece = board.getPiece(position);
                     ChessPiece otherPiece = board.getPiece(aheadPosition);
                     if (myPiece.pieceColor != otherPiece.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row + 1, col - 1), null));
+                        possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row + 1, col - 1), null));
                         break;
                     } else {
                         break;
@@ -131,13 +131,13 @@ public class ChessPiece {
             row += 1;
             col -= 1;
         }
-        row = start_row;
-        col = start_col;
+        row = startRow;
+        col = startCol;
         while (0 < row && 0 < col) {
             if (row - 1 > 0 && col - 1 > 0) {
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col - 1);
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col - 1), null));
+                    possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row - 1, col - 1), null));
                     row -= 1;
                     col -= 1;
                     continue;
@@ -145,7 +145,7 @@ public class ChessPiece {
                     ChessPiece myPiece = board.getPiece(position);
                     ChessPiece otherPiece = board.getPiece(aheadPosition);
                     if (myPiece.pieceColor != otherPiece.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col - 1), null));
+                        possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row - 1, col - 1), null));
                         break;
                     } else {
                         break;
@@ -155,13 +155,13 @@ public class ChessPiece {
             row -= 1;
             col -= 1;
         }
-        row = start_row;
-        col = start_col;
+        row = startRow;
+        col = startCol;
         while (0 < row && col < 9) {
             if (row - 1 > 0 && col + 1 < 9) {
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col + 1);
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col + 1), null));
+                    possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row - 1, col + 1), null));
                     row -= 1;
                     col += 1;
                     continue;
@@ -169,7 +169,7 @@ public class ChessPiece {
                     ChessPiece myBishop = board.getPiece(position);
                     ChessPiece bishopNeighbor = board.getPiece(aheadPosition);
                     if (myBishop.pieceColor != bishopNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(start_row, start_col), new ChessPosition(row - 1, col + 1), null));
+                        possibilities.add(new ChessMove(new ChessPosition(startRow, startCol), new ChessPosition(row - 1, col + 1), null));
                         break;
                     } else {
                         break;
@@ -179,158 +179,158 @@ public class ChessPiece {
             row -= 1;
             col += 1;
         }
-        return Possibilities;
+        return possibilities;
     }
 
     private Collection<ChessMove> kingCalc(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> Possibilities = new ArrayList<>();
+        Collection<ChessMove> possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
-        Collection<ChessPosition> Positions = new ArrayList<>();
+        Collection<ChessPosition> positions = new ArrayList<>();
         if (col - 1 > 0) {
-            Positions.add(new ChessPosition(row, col - 1));
+            positions.add(new ChessPosition(row, col - 1));
         }
         if (col + 1 < 9) {
-            Positions.add(new ChessPosition(row, col + 1));
+            positions.add(new ChessPosition(row, col + 1));
         }
         if (row - 1 > 0 && col - 1 > 0) {
-            Positions.add(new ChessPosition(row - 1, col - 1));
+            positions.add(new ChessPosition(row - 1, col - 1));
         }
         if (row - 1 > 0) {
-            Positions.add(new ChessPosition(row - 1, col));
+            positions.add(new ChessPosition(row - 1, col));
         }
         if (row - 1 > 0 && col + 1 < 9) {
-            Positions.add(new ChessPosition(row - 1, col + 1));
+            positions.add(new ChessPosition(row - 1, col + 1));
         }
         if (row + 1 < 9 && col - 1 > 0) {
-            Positions.add(new ChessPosition(row + 1, col - 1));
+            positions.add(new ChessPosition(row + 1, col - 1));
         }
         if (row + 1 < 9) {
-            Positions.add(new ChessPosition(row + 1, col));
+            positions.add(new ChessPosition(row + 1, col));
         }
         if (row + 1 < 9 && col + 1 < 9) {
-            Positions.add(new ChessPosition(row + 1, col + 1));
+            positions.add(new ChessPosition(row + 1, col + 1));
         }
-        for (ChessPosition pos : Positions) {
+        for (ChessPosition pos : positions) {
             if (board.getPiece(pos) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), pos, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), pos, null));
             } else {
                 ChessPiece myKing = board.getPiece(position);
                 ChessPiece kingNeighbor = board.getPiece(pos);
                 if (myKing.pieceColor != kingNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), pos, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), pos, null));
                 }
             }
         }
-        return Possibilities;
+        return possibilities;
     }
 
     private Collection<ChessMove> knightCalc(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> Possibilities = new ArrayList<>();
+        Collection<ChessMove> possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
-        Collection<ChessPosition> Positions = new ArrayList<>();
+        Collection<ChessPosition> positions = new ArrayList<>();
         if (row + 2 < 9 && col + 1 < 9) {
             ChessPosition aheadPosition1 = new ChessPosition(row + 2, col + 1);
             if (board.getPiece(aheadPosition1) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition1, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition1, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition1);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition1, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition1, null));
                 }
             }
         }
         if (row + 2 < 9 && col - 1 > 0) {
             ChessPosition aheadPosition2 = new ChessPosition(row + 2, col - 1);
             if (board.getPiece(aheadPosition2) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition2);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
                 }
             }
         }
         if (row + 1 < 9 && col + 2 < 9) {
             ChessPosition aheadPosition3 = new ChessPosition(row + 1, col + 2);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
         if (row + 1 < 9 && col - 2 > 0) {
             ChessPosition aheadPosition3 = new ChessPosition(row + 1, col - 2);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
         if (row - 1 > 0 && col + 2 < 9) {
             ChessPosition aheadPosition3 = new ChessPosition(row - 1, col + 2);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
         if (row - 1 > 0 && col - 2 > 0) {
             ChessPosition aheadPosition3 = new ChessPosition(row - 1, col - 2);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
         if (row - 2 > 0 && col + 1 < 9) {
             ChessPosition aheadPosition3 = new ChessPosition(row - 2, col + 1);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
         if (row - 2 > 0 && col - 1 > 0) {
             ChessPosition aheadPosition3 = new ChessPosition(row - 2, col - 1);
             if (board.getPiece(aheadPosition3) == null) {
-                Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
             } else {
                 ChessPiece myKnight = board.getPiece(position);
                 ChessPiece knightNeighbor = board.getPiece(aheadPosition3);
                 if (myKnight.pieceColor != knightNeighbor.pieceColor) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition3, null));
                 }
             }
         }
-        return Possibilities;
+        return possibilities;
     }
 
     private Collection<ChessMove> pawnCalc(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> Possibilities = new ArrayList<>();
+        Collection<ChessMove> possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
         if (board.getPiece(position).pieceColor == ChessGame.TeamColor.WHITE) {
@@ -343,12 +343,12 @@ public class ChessPiece {
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
                             if (row + 1 == 8) {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
                             } else {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
                             }
                         }
                     }
@@ -360,22 +360,22 @@ public class ChessPiece {
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
                             if (row + 1 == 8) {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
                             } else {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
                             }
                         }
                     }
                 }
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
                     int row2 = position.getRow() + 1;
                     ChessPosition aheadPosition2 = new ChessPosition(row2 + 1, col);
                     if (board.getPiece(aheadPosition2) == null) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
                     }
                 }
             } else {
@@ -386,7 +386,7 @@ public class ChessPiece {
                         ChessPiece myPawn = board.getPiece(position);
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                            possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
                         }
                     }
                 }
@@ -396,18 +396,18 @@ public class ChessPiece {
                         ChessPiece myPawn = board.getPiece(position);
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                            possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
                         }
                     }
                 }
                 if (board.getPiece(aheadPosition) == null) {
                     if (row + 1 == 8) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.KNIGHT));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.BISHOP));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.QUEEN));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.KNIGHT));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.BISHOP));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.QUEEN));
                     } else {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
                     }
                 }
             }
@@ -420,7 +420,7 @@ public class ChessPiece {
                         ChessPiece myPawn = board.getPiece(position);
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                            possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
                         }
                     }
                 }
@@ -430,16 +430,16 @@ public class ChessPiece {
                         ChessPiece myPawn = board.getPiece(position);
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
-                            Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                            possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
                         }
                     }
                 }
                 if (board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
                     int row2 = position.getRow() - 1;
                     ChessPosition aheadPosition2 = new ChessPosition(row2 - 1, col);
                     if (board.getPiece(aheadPosition2) == null) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition2, null));
                     }
                 }
             } else {
@@ -451,12 +451,12 @@ public class ChessPiece {
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker1);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
                             if (row - 1 == 1) {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.ROOK));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.KNIGHT));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.BISHOP));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, PieceType.QUEEN));
                             } else {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker1, null));
                             }
                         }
                     }
@@ -468,33 +468,33 @@ public class ChessPiece {
                         ChessPiece pawnNeighbor = board.getPiece(diagChecker2);
                         if (myPawn.pieceColor != pawnNeighbor.pieceColor) {
                             if (row - 1 == 1) {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.ROOK));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.KNIGHT));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.BISHOP));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, PieceType.QUEEN));
                             } else {
-                                Possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
+                                possibilities.add(new ChessMove(new ChessPosition(row, col), diagChecker2, null));
                             }
                         }
                     }
                 }
                 if (board.getPiece(aheadPosition) == null) {
                     if (row - 1 == 1) {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.KNIGHT));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.BISHOP));
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.QUEEN));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.ROOK));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.KNIGHT));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.BISHOP));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, PieceType.QUEEN));
                     } else {
-                        Possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(row, col), aheadPosition, null));
                     }
                 }
             }
         }
-        return Possibilities;
+        return possibilities;
     }
 
     private Collection<ChessMove> rookCalc(ChessBoard board, ChessPosition position) {
-        Collection<ChessMove> Possibilities = new ArrayList<>();
+        Collection<ChessMove> possibilities = new ArrayList<>();
         int row = position.getRow();
         int col = position.getColumn();
         int startingRow = position.getRow();
@@ -504,20 +504,20 @@ public class ChessPiece {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row + 1, col);
                 if (row + 1 == 8 && board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
                 if (board.getPiece(aheadPosition) != null) {
                     ChessPiece myRook = board.getPiece(position);
                     ChessPiece rookNeighbor = board.getPiece(aheadPosition);
                     if (myRook.pieceColor != rookNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     row += 1;
                 }
             }
@@ -528,20 +528,20 @@ public class ChessPiece {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row - 1, col);
                 if (row - 1 == 1 && board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
                 if (board.getPiece(aheadPosition) != null) {
                     ChessPiece myRook = board.getPiece(position);
                     ChessPiece rookNeighbor = board.getPiece(aheadPosition);
                     if (myRook.pieceColor != rookNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     row -= 1;
                 }
             }
@@ -552,20 +552,20 @@ public class ChessPiece {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row, col + 1);
                 if (col + 1 == 8 && board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
                 if (board.getPiece(aheadPosition) != null) {
                     ChessPiece myRook = board.getPiece(position);
                     ChessPiece rookNeighbor = board.getPiece(aheadPosition);
                     if (myRook.pieceColor != rookNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     col += 1;
                 }
             }
@@ -576,25 +576,25 @@ public class ChessPiece {
                 ChessPosition currentPosition = new ChessPosition(row, col);
                 ChessPosition aheadPosition = new ChessPosition(row, col - 1);
                 if (col - 1 == 1 && board.getPiece(aheadPosition) == null) {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     break;
                 }
                 if (board.getPiece(aheadPosition) != null) {
                     ChessPiece myRook = board.getPiece(position);
                     ChessPiece rookNeighbor = board.getPiece(aheadPosition);
                     if (myRook.pieceColor != rookNeighbor.pieceColor) {
-                        Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                        possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                         break;
                     } else {
                         break;
                     }
                 } else {
-                    Possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
+                    possibilities.add(new ChessMove(new ChessPosition(startingRow, startingCol), aheadPosition, null));
                     col -= 1;
                 }
             }
         }
-        return Possibilities;
+        return possibilities;
     }
 
     private Collection<ChessMove> queenCalc(ChessBoard board, ChessPosition position) {

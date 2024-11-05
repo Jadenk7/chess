@@ -1,8 +1,7 @@
 package dataaccess;
 import model.*;
-import dataaccess.*;
 import org.junit.jupiter.api.*;
-import RequestandResponse.*;
+
 import java.sql.*;
 import static org.junit.jupiter.api.Assertions.*;
 

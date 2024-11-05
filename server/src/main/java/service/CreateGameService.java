@@ -1,8 +1,8 @@
 package service;
 import dataaccess.*;
 import model.GameData;
-import RequestandResponse.CreateGameRequest;
-import RequestandResponse.CreateGameResponse;
+import requestandresponse.CreateGameRequest;
+import requestandresponse.CreateGameResponse;
 public class CreateGameService {
     private GameDAO gameDA = new GameDAO();
     private AuthDAO auth = new AuthDAO();

@@ -1,5 +1,5 @@
 package server.handler;
-import RequestandResponse.ClearResponse;
+import requestandresponse.ClearResponse;
 import com.google.gson.Gson;
 import service.ClearService;
 import spark.*;

@@ -1,8 +1,7 @@
 package dataaccess;
 import model.*;
-import dataaccess.*;
 import org.junit.jupiter.api.*;
-import RequestandResponse.*;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,7 +65,8 @@ public class UserTests {
             throw new RuntimeException(exception);
         }
         UserData dittoUsername = new UserData("Jadenizer", "EarthboundRules", "jadenizer@gmail.com");
-        assertThrows(DataAccessException.class, () -> {myUser.createUser(dittoUsername.getName(), dittoUsername.getPassword(), dittoUsername.getEmail());});
+        assertThrows(DataAccessException.class, () ->
+        {myUser.createUser(dittoUsername.getName(), dittoUsername.getPassword(), dittoUsername.getEmail());});
     }
     @Test
     public void returnUserTest(){

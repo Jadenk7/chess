@@ -1,10 +1,10 @@
-package RequestandResponse;
-
-public class JoinGameResponse {
-    public JoinGameResponse(String message){
+package requestandresponse;
+public class LogoutResponse {
+    public LogoutResponse(String message){
         this.message = message;
     }
-    public JoinGameResponse() {
+    public LogoutResponse(){
+
     }
     public void setMessage(String message) {
         this.message = message;

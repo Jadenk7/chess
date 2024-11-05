@@ -3,7 +3,7 @@ import com.google.gson.Gson;
 import spark.Request;
 import spark.Response;
 import spark.*;
-import RequestandResponse.*;
+import requestandresponse.*;
 import service.*;
 public class RegisterHandler implements Route{
     @Override

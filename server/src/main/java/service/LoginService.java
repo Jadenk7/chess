@@ -1,8 +1,8 @@
 package service;
 import  dataaccess.*;
 import model.*;
-import RequestandResponse.LoginResponse;
-import RequestandResponse.LoginRequest;
+import requestandresponse.LoginResponse;
+import requestandresponse.LoginRequest;
 import java.util.UUID;
 import java.sql.*;
 import org.mindrot.jbcrypt.*;
