@@ -1,19 +1,29 @@
 package service;
 import RequestandResponse.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import model.*;
 import java.util.*;
 import chess.ChessGame;
+import server.Server;
 
 public class ServiceUnitTests {
+    private static Server server;
     private static final UserData me = new UserData("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
     @BeforeEach
     public void resetAll(){
         new ClearService().clearEverything();
     }
+    @BeforeAll
+    public static void setServer(){
+        server = new Server();
+        server.run(8080);
+    }
+
+    @AfterAll
+    static void stopServer(){
+        server.stop();
+    }
+
     @Test
     @Order(1)
     public void Clearing(){
