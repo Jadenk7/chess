@@ -8,7 +8,7 @@ import spark.*;
 import java.sql.*;
 
 public class Server {
-    /*private final String[] createStatements = {
+    private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS `authtoken` (
               `authToken` varchar(45) NOT NULL,
@@ -34,9 +34,9 @@ public class Server {
               PRIMARY KEY (`username`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
-    };*/
+    };
 
-    /*private void configureDatabase() throws DataAccessException {
+    private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
         try (Connection conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
@@ -45,15 +45,15 @@ public class Server {
                 }
             }
         } catch (SQLException ex) {
-            throw new DataAccessException(ex);
+            throw new DataAccessException(ex.getMessage());
         }
-    }*/
+    }
     public int run(int desiredPort) {
-        /*try {
+        try {
             configureDatabase();
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
-        }*/
+        }
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
         // Register your endpoints and handle exceptions here.
