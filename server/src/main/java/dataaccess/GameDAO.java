@@ -63,7 +63,7 @@ public class GameDAO {
     public Collection<GameData> returnGameMap() throws DataAccessException{
         Collection<GameData> gameArrays  = new ArrayList<>();
         try (Connection connection = DatabaseManager.getConnection()) {
-            try (var prepStatement = connection.prepareStatement("SELECT* FROM Game")) {
+            try (var prepStatement = connection.prepareStatement("SELECT* FROM game")) {
                 try (var rs = prepStatement.executeQuery()) {
                     while (rs.next()) {
                         var json = rs.getString("game");
