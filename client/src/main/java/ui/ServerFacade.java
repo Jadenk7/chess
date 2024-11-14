@@ -35,4 +35,33 @@ public class ServerFacade {
             return resp;
         }
     }
+    public CreateGameResponse createGame(CreateGameRequest request) throws IOException{
+        URL url = new URL(serverUrl+"/game");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(5000);
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        conn.addRequestProperty("Authorization", TokenPlaceholder.token);
+        conn.connect();
+        try (var outStream = conn.getOutputStream()) {
+            outStream.write(new Gson().toJson(request).getBytes());
+        }
+        if (HttpURLConnection.HTTP_OK != conn.getResponseCode()) {
+            CreateGameResponse resp = null;
+            try (InputStream stream = conn.getErrorStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                resp = new Gson().fromJson(streamReader, CreateGameResponse.class);
+            }
+            return resp;
+        }
+
+        else {
+            CreateGameResponse resp = null;
+            try (InputStream stream = conn.getInputStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                resp = new Gson().fromJson(streamReader, CreateGameResponse.class);
+            }
+            return resp;
+        }
+    }
 }
