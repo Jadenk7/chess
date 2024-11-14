@@ -92,4 +92,29 @@ public class ServerFacade {
             return resp;
         }
     }
+    public LogoutResponse logout() throws IOException{
+        URL url = new URL(serverUrl+"/session");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(5000);
+        conn.setRequestMethod("DELETE");
+        conn.addRequestProperty("Authorization", TokenPlaceholder.token);
+        conn.connect();
+        if (HttpURLConnection.HTTP_OK != conn.getResponseCode()) {
+            LogoutResponse resp = null;
+            try (InputStream stream = conn.getErrorStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                resp = new Gson().fromJson(streamReader, LogoutResponse.class);
+            }
+            return resp;
+        }
+
+        else {
+            LogoutResponse resp = null;
+            try (InputStream stream = conn.getInputStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                resp = new Gson().fromJson(streamReader, LogoutResponse.class);
+            }
+            return resp;
+        }
+    }
 }
