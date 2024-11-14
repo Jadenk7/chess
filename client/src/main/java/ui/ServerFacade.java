@@ -1,4 +1,6 @@
 package ui;
+import chess.ChessBoard;
+import chess.ChessGame;
 import requestandresponse.*;
 import com.google.gson.*;
 import java.io.IOException;
@@ -141,6 +143,32 @@ public class ServerFacade {
             try (InputStream stream = conn.getInputStream()) {
                 InputStreamReader streamReader = new InputStreamReader(stream);
                 resp = new Gson().fromJson(streamReader, JoinGameResponse.class);
+            }
+            return resp;
+        }
+    }
+    public ListGamesResponse listgames() throws IOException{
+        URL url = new URL(serverUrl+"/game");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setReadTimeout(5000);
+        conn.setRequestMethod("GET");
+        conn.addRequestProperty("Authorization", TokenPlaceholder.token);
+        conn.connect();
+        if (HttpURLConnection.HTTP_OK != conn.getResponseCode()) {
+            ListGamesResponse resp = null;
+            try (InputStream stream = conn.getErrorStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                resp = new Gson().fromJson(streamReader, ListGamesResponse.class);
+            }
+            return resp;
+        }
+
+        else {
+            ListGamesResponse resp = null;
+            try (InputStream stream = conn.getInputStream()) {
+                InputStreamReader streamReader = new InputStreamReader(stream);
+                GsonBuilder gBuild = new GsonBuilder();
+                resp = gBuild.create().fromJson(streamReader, ListGamesResponse.class);
             }
             return resp;
         }
