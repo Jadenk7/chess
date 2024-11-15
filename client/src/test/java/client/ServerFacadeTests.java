@@ -118,7 +118,21 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void CreateGame(){
+    void LogoutFail(){
+        RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+        try {
+            facade.register(request);
+            LoginRequest loginRequest = new LoginRequest("Jaden", "Something");
+            LoginResponse response = facade.login(loginRequest);
+            TokenPlaceholder.token = response.getAuth();
+            LogoutResponse response2 = facade.logout();
+            assertNotNull(response2.getMessage());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    @Test
+    void CreateGameSuccess(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -128,6 +142,22 @@ public class ServerFacadeTests {
             TokenPlaceholder.token = response.getAuth();
             CreateGameResponse response2 = facade.createGame(request3);
             assertNull(response2.getMessage());
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    @Test
+    void CreateGameFail(){
+        RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+        LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
+        CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
+        try{
+            facade.register(request1);
+            LoginResponse response = facade.login(request2);
+            TokenPlaceholder.token = null;
+            CreateGameResponse response2 = facade.createGame(request3);
+            assertNotNull(response2.getMessage());
         }
         catch(IOException e){
             System.out.println(e.getMessage());
