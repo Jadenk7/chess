@@ -6,13 +6,8 @@ import java.io.IOException;
 import java.util.Scanner;
 import model.*;
 public class Main {
-    private static ServerFacade server;
-}
-    private static void loggedInCommands() throws IOException {
-        Server localServer = new Server();
-        int port = localServer.run(0);
-        System.out.println("Started HTTP server on port: " + port);
-        ServerFacade server = new ServerFacade(port);
+
+    private static void loggedInCommands(ServerFacade server) throws IOException {
         System.out.print("\n");
         System.out.println("\"list\" - to list all games");
         System.out.println("\"create\" - to create and name a new game");
@@ -29,7 +24,7 @@ public class Main {
                 ListGamesResponse resp = server.listgames();
                 if(resp.getMessage() != null){
                     System.out.println(resp.getMessage());
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 else{
@@ -41,7 +36,7 @@ public class Main {
                         System.out.println("White Player: " + game.getWhiteUsername());
                         System.out.println(" Black Player: " + game.getBlackUsername());
                     }
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
             case "create":
@@ -51,14 +46,14 @@ public class Main {
                 CreateGameResponse response = server.createGame(req);
                 if(response.getMessage() != null) {
                     System.out.println(response.getMessage());
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 else{
                     System.out.println("<Successful Game Creation>");
                     System.out.println("Game ID: " + response.getID());
                     System.out.println();
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
             case "join":
@@ -84,14 +79,14 @@ public class Main {
                 catch (java.util.InputMismatchException e) {
                     System.out.println("Input not accepted");
                     scanner.nextLine();
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 JoinGameRequest request = new JoinGameRequest(color, id);
                 JoinGameResponse myResponse = server.joinGame(request);
                 if (myResponse.getMessage() != null) {
                     System.out.println(myResponse.getMessage());
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 else {
@@ -112,14 +107,14 @@ public class Main {
                 catch(java.util.InputMismatchException e){
                     System.out.println("Input not accepted");
                     scanner.nextLine();
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 JoinGameRequest req1 = new JoinGameRequest(null, gameID);
                 JoinGameResponse resp1 = server.joinGame(req1);
                 if(resp1.getMessage() != null) {
                     System.out.println(resp1.getMessage());
-                    loggedInCommands();
+                    loggedInCommands(server);
                     break;
                 }
                 else{
@@ -132,7 +127,7 @@ public class Main {
                     break;
                 }
             case "help":
-                loggedInCommands();
+                loggedInCommands(server);
                 break;
             case "logout":
                 LogoutResponse resp2 = server.logout();
@@ -152,7 +147,7 @@ public class Main {
                 break;
             default:
                 System.out.println("<Command not accepted>");
-                loggedInCommands();
+                loggedInCommands(server);
                 break;
         }
     }
@@ -165,7 +160,7 @@ public class Main {
     }
     public static void main(String[] args) throws IOException {
         Server localServer = new Server();
-        int port = localServer.run(0);
+        int port = localServer.run(8080);
         System.out.println("Started HTTP server on port: " + port);
         ServerFacade server = new ServerFacade(port);
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
@@ -190,7 +185,7 @@ public class Main {
                 else{
                     TokenPlaceholder.token = resp.getAuth();
                     System.out.println("<Successful Registration>");
-                    loggedInCommands();
+                    loggedInCommands(server);
                 }
             }
             else if (input.equals("login")) {
@@ -207,7 +202,7 @@ public class Main {
                 else{
                     TokenPlaceholder.token = resp.getAuth();
                     System.out.println("<Successful Login>");
-                    loggedInCommands();
+                    loggedInCommands(server);
                 }
             }
             else if (input.equals("help")) {
@@ -225,4 +220,5 @@ public class Main {
                 listCommands();
             }
         }
+    }
     }
