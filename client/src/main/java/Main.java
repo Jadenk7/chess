@@ -1,12 +1,18 @@
 import chess.*;
 import requestandresponse.*;
+import server.Server;
 import ui.*;
 import java.io.IOException;
 import java.util.Scanner;
 import model.*;
 public class Main {
+    private static ServerFacade server;
+}
     private static void loggedInCommands() throws IOException {
-        ServerFacade server = new ServerFacade();
+        Server localServer = new Server();
+        int port = localServer.run(0);
+        System.out.println("Started HTTP server on port: " + port);
+        ServerFacade server = new ServerFacade(port);
         System.out.print("\n");
         System.out.println("\"list\" - to list all games");
         System.out.println("\"create\" - to create and name a new game");
@@ -158,8 +164,11 @@ public class Main {
         System.out.println("\"quit\" - to quit your game");
     }
     public static void main(String[] args) throws IOException {
+        Server localServer = new Server();
+        int port = localServer.run(0);
+        System.out.println("Started HTTP server on port: " + port);
+        ServerFacade server = new ServerFacade(port);
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-        ServerFacade server = new ServerFacade();
         Scanner scanner = new Scanner(System.in);
         System.out.println("♕ 240 Chess Client: " + piece);
         listCommands();
@@ -217,4 +226,3 @@ public class Main {
             }
         }
     }
-}

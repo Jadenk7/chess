@@ -8,8 +8,10 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 public class ServerFacade {
-    private final String serverUrl = "http://localhost:8080";
-
+    private String serverUrl;
+    public ServerFacade(int port){
+        this.serverUrl = "http://localhost:" + port;
+    }
     public RegResponse register(RegRequest req) throws IOException {
         URL url = new URL(serverUrl + "/user");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
