@@ -1,5 +1,6 @@
 package client;
 
+import chess.ChessGame;
 import org.junit.jupiter.api.*;
 import requestandresponse.*;
 import server.Server;
@@ -167,4 +168,49 @@ public class ServerFacadeTests {
             System.out.println(e.getMessage());
         }
     }
+    @Test
+    void JoinGameSuccess(){
+        RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+        LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
+        CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
+        try{
+            facade.register(request1);
+            LoginResponse response = facade.login(request2);
+            TokenPlaceholder.token = response.getAuth();
+            CreateGameResponse response2 = facade.createGame(request3);
+            int gameID = response2.getID();
+            JoinGameRequest request4 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
+            JoinGameResponse response3 = facade.joinGame(request4);
+            assertNull(response3.getMessage());
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    @Test
+    void JoinGameFail(){
+    RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+    RegRequest otherRequest1 = new RegRequest("Jo Bro", "Ferrariman4", "jonahk12@gmail.com");
+    LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
+    LoginRequest otherRequest2 = new LoginRequest("Jo Bro", "Ferrariman4");
+    CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
+        try{
+        facade.register(request1);
+        facade.register(otherRequest1);
+        LoginResponse response = facade.login(request2);
+        TokenPlaceholder.token = response.getAuth();
+        CreateGameResponse response2 = facade.createGame(request3);
+        int gameID = response2.getID();
+        JoinGameRequest request4 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
+        facade.joinGame(request4);
+        LoginResponse response3 = facade.login(otherRequest2);
+        TokenPlaceholder.token = response3.getAuth();
+        JoinGameRequest request5 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
+        JoinGameResponse response4 = facade.joinGame(request5);
+        assertEquals("Error! Color is taken", response4.getMessage());
+    }
+        catch(IOException e){
+        System.out.println(e.getMessage());
+    }
+}
 }
