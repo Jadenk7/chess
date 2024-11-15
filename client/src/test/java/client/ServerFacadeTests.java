@@ -132,4 +132,39 @@ public class ServerFacadeTests {
             System.out.println(e.getMessage());
         }
     }
+    @Test
+    void ListGamesSuccess(){
+        RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+        LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
+        CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
+        try{
+            facade.register(request1);
+            LoginResponse response = facade.login(request2);
+            TokenPlaceholder.token = response.getAuth();
+            facade.createGame(request3);
+            ListGamesResponse response2 = facade.listgames();
+            assertNull(response2.getMessage());
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Test
+    void ListGamesFail(){
+        RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
+        LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
+        CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
+        try{
+            facade.register(request1);
+            LoginResponse response = facade.login(request2);
+            TokenPlaceholder.token = null;
+            facade.createGame(request3);
+            ListGamesResponse response2 = facade.listgames();
+            assertNotNull(response2.getMessage());
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
