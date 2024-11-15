@@ -2,7 +2,10 @@ import chess.*;
 import requestandresponse.*;
 import server.Server;
 import ui.*;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 import java.util.Scanner;
 import model.*;
 public class Main {
@@ -159,9 +162,11 @@ public class Main {
         System.out.println("\"quit\" - to quit your game");
     }
     public static void main(String[] args) throws IOException {
-        Server localServer = new Server();
-        int port = localServer.run(0);
-        System.out.println("Started HTTP server on port: " + port);
+        Properties properties = new Properties();
+        try (FileInputStream in = new FileInputStream("server.properties")) {
+            properties.load(in);
+        }
+        int port = Integer.parseInt(properties.getProperty("server.port"));
         ServerFacade server = new ServerFacade(port);
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
         Scanner scanner = new Scanner(System.in);
