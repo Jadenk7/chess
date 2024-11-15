@@ -160,7 +160,7 @@ public class Main {
     }
     public static void main(String[] args) throws IOException {
         Server localServer = new Server();
-        int port = localServer.run(8080);
+        int port = localServer.run(0);
         System.out.println("Started HTTP server on port: " + port);
         ServerFacade server = new ServerFacade(port);
         var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
