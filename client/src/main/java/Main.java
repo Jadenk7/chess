@@ -1,6 +1,5 @@
 import chess.*;
 import requestandresponse.*;
-import server.Server;
 import ui.*;
 
 import java.io.FileInputStream;
