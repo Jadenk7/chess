@@ -9,7 +9,6 @@ import ui.ServerFacade;
 import ui.TokenPlaceholder;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
