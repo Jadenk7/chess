@@ -139,15 +139,26 @@ public class ChessGame {
     private boolean isKingThreatened(ChessPosition kingPosition, TeamColor teamColor) {
         for (int row = 1; row < 9; row++) {
             for (int column = 1; column < 9; column++) {
-                ChessPosition currentPos = new ChessPosition(row, column);
-                ChessPiece currentPiece = checkers.getPiece(currentPos);
-                if (currentPiece != null && currentPiece.getTeamColor() != teamColor) {
-                    for (ChessMove move : currentPiece.pieceMoves(checkers, currentPos)) {
-                        if (move.getEndPosition().equals(kingPosition)) {
-                            return true;
-                        }
-                    }
+                if (isOpponentPieceThreatening(kingPosition, new ChessPosition(row, column), teamColor)) {
+                    return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    private boolean isOpponentPieceThreatening(ChessPosition kingPosition, ChessPosition currentPosition, TeamColor teamColor) {
+        ChessPiece currentPiece = checkers.getPiece(currentPosition);
+        if (currentPiece == null || currentPiece.getTeamColor() == teamColor) {
+            return false;
+        }
+        return canPieceThreatenKing(currentPiece, currentPosition, kingPosition);
+    }
+
+    private boolean canPieceThreatenKing(ChessPiece piece, ChessPosition piecePosition, ChessPosition kingPosition) {
+        for (ChessMove move : piece.pieceMoves(checkers, piecePosition)) {
+            if (move.getEndPosition().equals(kingPosition)) {
+                return true;
             }
         }
         return false;
