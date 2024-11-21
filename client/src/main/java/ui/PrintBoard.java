@@ -53,46 +53,49 @@ public class PrintBoard {
         }
         return null;
     }
+    public static void drawing(int row, int col){
+        if (row == 0 || col == 0 || row == 9 || col == 9) {
+            System.out.print(SET_BG_COLOR_WHITE);
+            if ((row > 0 && row < 9 && col == 9) || (row > 0 && row < 9 && col == 0)) {
+                System.out.print(" " + (row) + " ");
+            }
+            else if ((col > 0 && col < 9 && row == 0) || (col > 0 && col < 9 && row == 9)) {
+                char column = (char) ('h' + 1 - col);
+                System.out.print(" " + column + " ");
+            }
+            else {
+                System.out.print(EMPTY);
+            }
+        }
+        else {
+            ChessPosition position = new ChessPosition(row - 1, col - 1);
+            ChessPiece piece = board.getPiece(position);
+            if (piece != null) {
+                if ((row + col) % 2 == 0) {
+                    System.out.print(SET_BG_COLOR_GREEN);
+                } else {
+                    System.out.print(SET_BG_COLOR_YELLOW);
+                }
+                System.out.print(getType(board.getPiece(position)));
+            }
+            else {
+                if ((row + col) % 2 != 0) {
+                    System.out.print(SET_BG_COLOR_YELLOW);
+                    System.out.print(EMPTY);
+                }
+                else {
+                    System.out.print(SET_BG_COLOR_GREEN);
+                    System.out.print(EMPTY);
+                }
+            }
+        }
+    }
     public static void drawForPlayer1(ChessBoard board) {
         int row = 0;
         while (row < 10) {
             int col = 0;
             while (col < 10) {
-                if (row == 0 || col == 0 || row == 9 || col == 9) {
-                    System.out.print(SET_BG_COLOR_WHITE);
-                    if ((row > 0 && row < 9 && col == 9) || (row > 0 && row < 9 && col == 0)) {
-                        System.out.print(" " + (row) + " ");
-                    }
-                    else if ((col > 0 && col < 9 && row == 0) || (col > 0 && col < 9 && row == 9)) {
-                        char column = (char) ('h' + 1 - col);
-                        System.out.print(" " + column + " ");
-                    }
-                    else {
-                        System.out.print(EMPTY);
-                    }
-                }
-                else {
-                    ChessPosition position = new ChessPosition(row - 1, col - 1);
-                    ChessPiece piece = board.getPiece(position);
-                    if (piece != null) {
-                        if ((row + col) % 2 == 0) {
-                            System.out.print(SET_BG_COLOR_GREEN);
-                        } else {
-                            System.out.print(SET_BG_COLOR_YELLOW);
-                        }
-                        System.out.print(getType(board.getPiece(position)));
-                    }
-                    else {
-                        if ((row + col) % 2 != 0) {
-                            System.out.print(SET_BG_COLOR_YELLOW);
-                            System.out.print(EMPTY);
-                        }
-                        else {
-                            System.out.print(SET_BG_COLOR_GREEN);
-                            System.out.print(EMPTY);
-                        }
-                    }
-                }
+                drawing(row, col);
                 col++;
             }
             System.out.print(RESET_BG_COLOR);
@@ -105,41 +108,7 @@ public class PrintBoard {
         while (row >= 0) {
             int col = 9;
             while (col >= 0) {
-                if (row == 0 || col == 0 || row == 9 || col == 9) {
-                    System.out.print(SET_BG_COLOR_WHITE);
-                    if ((row > 0 && row < 9 && col == 9) || (row > 0 && row < 9 && col == 0)) {
-                        System.out.print(" " + (row) + " ");
-                    }
-                    else if ((col > 0 && col < 9 && row == 0) || (col > 0 && col < 9 && row == 9)) {
-                        char column = (char) ('h' + 1 - col);
-                        System.out.print(" " + column + " ");
-                    }
-                    else {
-                        System.out.print(EMPTY);
-                    }
-                }
-                else {
-                    ChessPosition position = new ChessPosition(row - 1, col - 1);
-                    ChessPiece piece = board.getPiece(position);
-                    if (piece != null) {
-                        if ((row + col) % 2 == 0) {
-                            System.out.print(SET_BG_COLOR_GREEN);
-                        } else {
-                            System.out.print(SET_BG_COLOR_YELLOW);
-                        }
-                        System.out.print(getType(board.getPiece(position)));
-                    }
-                    else {
-                        if ((row + col) % 2 != 0) {
-                            System.out.print(SET_BG_COLOR_YELLOW);
-                            System.out.print(EMPTY);
-                        }
-                        else {
-                            System.out.print(SET_BG_COLOR_GREEN);
-                            System.out.print(EMPTY);
-                        }
-                    }
-                }
+                drawing(row,col);
                 col--;
             }
             System.out.print(RESET_BG_COLOR);

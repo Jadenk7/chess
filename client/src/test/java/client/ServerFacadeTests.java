@@ -39,7 +39,7 @@ public class ServerFacadeTests {
 
 
     @Test
-    void RegisterSuccess() {
+    void registerSuccess() {
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             RegResponse response = facade.register(request);
@@ -50,7 +50,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void RegisterFail() {
+    void registerFail() {
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             facade.register(request);
@@ -67,7 +67,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void LoginSuccess(){
+    void loginSuccess(){
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             facade.register(request);
@@ -85,7 +85,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void LoginFail(){
+    void loginFail(){
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             facade.register(request);
@@ -102,7 +102,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void Logout(){
+    void logout(){
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             facade.register(request);
@@ -117,7 +117,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void LogoutFail(){
+    void logoutFail(){
         RegRequest request = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         try {
             facade.register(request);
@@ -131,7 +131,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void CreateGameSuccess(){
+    void createGameSuccess(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -147,7 +147,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void CreateGameFail(){
+    void createGameFail(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -163,7 +163,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void ListGamesSuccess(){
+    void listGamesSuccess(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -181,7 +181,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    void ListGamesFail(){
+    void listGamesFail(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -198,7 +198,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void JoinGameSuccess(){
+    void joinGameSuccess(){
         RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
         LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
         CreateGameRequest request3 = new CreateGameRequest("Jaden's Game");
@@ -217,7 +217,7 @@ public class ServerFacadeTests {
         }
     }
     @Test
-    void JoinGameFail(){
+    void joinGameFail(){
     RegRequest request1 = new RegRequest("Jadenizer", "Earthbounder4", "kunzlerj9@gmail.com");
     RegRequest otherRequest1 = new RegRequest("Jo Bro", "Ferrariman4", "jonahk12@gmail.com");
     LoginRequest request2 = new LoginRequest("Jadenizer", "Earthbounder4");
