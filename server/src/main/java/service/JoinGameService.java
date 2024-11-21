@@ -8,37 +8,29 @@ public class JoinGameService {
         try {
             GameDAO gameDAO = new GameDAO();
             AuthDAO authDAO = new AuthDAO();
-            JoinGameResponse joining = new JoinGameResponse();
-            GameData game = new GameDAO().returnGame(request.getGameID());
-            if (game != null){
-                if(request.getPlayerColor() != null){
-                    AuthData authtoken = authDAO.returnToken(authToken);
-                    if(authtoken != null) {
-                        if (game.getBlackUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.BLACK) {
-                            return new JoinGameResponse("Error! Color is taken");
-                        }
-                        if (game.getWhiteUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.WHITE) {
-                            return new JoinGameResponse("Error! Color is taken");
-                        }
-                        gameDAO.playerNamer(authtoken.getName(), request.getGameID(), request.getPlayerColor());
-                    }
-                    else{
-                        return new JoinGameResponse("Error! Give auth Token");
-                    }
-                }
-                else{
-                    if(authDAO.returnToken(authToken) == null){
-                        return new JoinGameResponse("Error! Give auth Token");
-                    }
-                    return new JoinGameResponse("Error! No game");
-                }
-            }
-            else{
+            GameData game = gameDAO.returnGame(request.getGameID());
+            if (game == null) {
                 return new JoinGameResponse("Error! No game");
             }
-            return joining;
-        }
-        catch (Exception exception){
+            if (request.getPlayerColor() == null) {
+                if (authDAO.returnToken(authToken) == null) {
+                    return new JoinGameResponse("Error! Give auth Token");
+                }
+                return new JoinGameResponse("Error! No game");
+            }
+            AuthData authtoken = authDAO.returnToken(authToken);
+            if (authtoken == null) {
+                return new JoinGameResponse("Error! Give auth Token");
+            }
+            if (game.getBlackUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.BLACK) {
+                return new JoinGameResponse("Error! Color is taken");
+            }
+            if (game.getWhiteUsername() != null && request.getPlayerColor() == ChessGame.TeamColor.WHITE) {
+                return new JoinGameResponse("Error! Color is taken");
+            }
+            gameDAO.playerNamer(authtoken.getName(), request.getGameID(), request.getPlayerColor());
+            return new JoinGameResponse();
+        } catch (Exception exception) {
             return new JoinGameResponse(exception.getMessage());
         }
     }

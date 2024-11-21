@@ -30,19 +30,6 @@ public class ChessBoard {
 
     @Override
     public String toString() {
-        /*String word = "Chess Board[";
-        for (int i = 0 ; i < 8; i++){
-            for (int g = 0 ; g < 8; g++) {
-                if (checkers[i][g] != null) {
-                    word = word + checkers[i][g].toString() + " ";
-                }
-                else {
-                    word = word + "null";
-                }
-            }
-        }
-        word += "]";
-        return word;*/
         return "ChessBoard{" +
                 "checkers=" + Arrays.deepToString(checkers) +
                 '}';

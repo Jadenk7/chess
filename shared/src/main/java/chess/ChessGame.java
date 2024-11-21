@@ -59,21 +59,15 @@ public class ChessGame {
     }
 
     public ChessPosition kingFinder(TeamColor color) {
-        ChessPosition myKing = null;
         for (int row = 1; row < 9; row++) {
             for (int column = 1; column < 9; column++) {
                 ChessPiece currentPiece = checkers.getPiece(new ChessPosition(row, column));
-                if (currentPiece != null) {
-                    if (currentPiece.getTeamColor() == color) {
-                        if (currentPiece.getPieceType() == ChessPiece.PieceType.KING) {
-                            myKing = new ChessPosition(row, column);
-                            break;
-                        }
-                    }
+                if (currentPiece != null && currentPiece.getTeamColor() == color && currentPiece.getPieceType() == ChessPiece.PieceType.KING) {
+                    return new ChessPosition(row, column);
                 }
             }
         }
-        return myKing;
+        return null;
     }
 
     /**
@@ -135,19 +129,22 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        if (kingFinder(teamColor) == null) {
+        ChessPosition kingPosition = kingFinder(teamColor);
+        if (kingPosition == null) {
             return false;
         }
+        return isKingThreatened(kingPosition, teamColor);
+    }
+
+    private boolean isKingThreatened(ChessPosition kingPosition, TeamColor teamColor) {
         for (int row = 1; row < 9; row++) {
             for (int column = 1; column < 9; column++) {
                 ChessPosition currentPos = new ChessPosition(row, column);
                 ChessPiece currentPiece = checkers.getPiece(currentPos);
-                if (currentPiece != null) {
-                    if (currentPiece.getTeamColor() != teamColor) {
-                        for (ChessMove move : currentPiece.pieceMoves(checkers, currentPos)) {
-                            if (move.getEndPosition().equals(kingFinder(teamColor))) {
-                                return true;
-                            }
+                if (currentPiece != null && currentPiece.getTeamColor() != teamColor) {
+                    for (ChessMove move : currentPiece.pieceMoves(checkers, currentPos)) {
+                        if (move.getEndPosition().equals(kingPosition)) {
+                            return true;
                         }
                     }
                 }
@@ -163,33 +160,48 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        if (kingFinder(teamColor) == null) {
+        if (kingFinder(teamColor) == null || !isInCheck(teamColor)) {
             return false;
         }
-        if (isInCheck(teamColor) == false) {
-            return false;
-        }
+        return !hasValidEscape(teamColor);
+    }
+
+    private boolean hasValidEscape(TeamColor teamColor) {
         for (int row = 1; row < 9; row++) {
             for (int column = 1; column < 9; column++) {
                 ChessPosition currentPosition = new ChessPosition(row, column);
                 ChessPiece currentPiece = checkers.getPiece(currentPosition);
-                if (currentPiece != null) {
-                    if (currentPiece.getTeamColor() == teamColor) {
-                        for (ChessMove move : currentPiece.pieceMoves(checkers, currentPosition)) {
-                            ChessPiece originalStart = checkers.getPiece(move.getStartPosition());
-                            ChessPiece originalEnd = checkers.getPiece(move.getEndPosition());
-                            moveIt(checkers, move);
-                            if (isInCheck(teamColor) == false) {
-                                unmoveIt(checkers, move, originalStart, originalEnd);
-                                return false;
-                            }
-                            unmoveIt(checkers, move, originalStart, originalEnd);
-                        }
+
+                if (isPieceValidForEscape(currentPiece, teamColor)) {
+                    if (canAnyMoveEscapeCheck(currentPiece, currentPosition, teamColor)) {
+                        return true;
                     }
                 }
             }
         }
-        return true;
+        return false;
+    }
+
+    private boolean isPieceValidForEscape(ChessPiece piece, TeamColor teamColor) {
+        return piece != null && piece.getTeamColor() == teamColor;
+    }
+
+    private boolean canAnyMoveEscapeCheck(ChessPiece piece, ChessPosition position, TeamColor teamColor) {
+        for (ChessMove move : piece.pieceMoves(checkers, position)) {
+            if (canEscapeCheck(move, teamColor)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean canEscapeCheck(ChessMove move, TeamColor teamColor) {
+        ChessPiece originalStart = checkers.getPiece(move.getStartPosition());
+        ChessPiece originalEnd = checkers.getPiece(move.getEndPosition());
+        moveIt(checkers, move);
+        boolean escape = !isInCheck(teamColor);
+        unmoveIt(checkers, move, originalStart, originalEnd);
+        return escape;
     }
 
     /**
@@ -203,21 +215,7 @@ public class ChessGame {
         if (isInCheck(teamColor)) {
             return false;
         }
-        for (int row = 1; row < 9; row++) {
-            for (int column = 1; column < 9; column++) {
-                ChessPosition currentPosition = new ChessPosition(row, column);
-                ChessPiece currentPiece = checkers.getPiece(currentPosition);
-                if (currentPiece != null) {
-                    if (currentPiece.getTeamColor() == teamColor) {
-                        Collection<ChessMove> movesAllowed = validMoves(currentPosition);
-                            if (movesAllowed.isEmpty() == false) {
-                                return false;
-                            }
-                    }
-                }
-            }
-        }
-        return true;
+        return !hasValidEscape(teamColor);
     }
 
     /**
