@@ -16,12 +16,19 @@ public class CreateGameResponse {
     public String getMessage() {
         return message;
     }
-    public void setID(int id){
+    public void setID(Integer id){
         this.gameID = id;
     }
-    public int getID() {
+    public Integer getID() {
         return gameID;
     }
     private String message;
     private Integer gameID;
+    private int sequentialId;
+    public int getSequentialId() {
+        return sequentialId;
+    }
+    public void setSequentialId(int sequentialId) {
+        this.sequentialId = sequentialId;
+    }
 }

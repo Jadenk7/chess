@@ -34,10 +34,6 @@ public class Main {
             case "logout":
                 handleLogout(server);
                 break;
-            case "quit":
-                System.out.println("<Exited the Program>");
-                System.exit(0);
-                break;
             default:
                 System.out.println("<Command not accepted>");
                 loggedInCommands(server);
@@ -51,7 +47,6 @@ public class Main {
         System.out.println("\"observe\" - to observe a game. ID required");
         System.out.println("\"help\" - to list possible commands");
         System.out.println("\"logout\" - to log out");
-        System.out.println("\"quit\" - to quit your game");
     }
 
     private static void handleListGames(ServerFacade server) throws IOException {
@@ -80,7 +75,7 @@ public class Main {
             System.out.println(response.getMessage());
         } else {
             System.out.println("<Successful Game Creation>");
-            System.out.println("Game ID: " + response.getID());
+            System.out.println("Game ID: " + response.getSequentialId());
             System.out.println();
         }
         loggedInCommands(server);
