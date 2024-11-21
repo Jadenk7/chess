@@ -128,6 +128,16 @@ public class ChessPiece {
         }
         return moves;
     }
+    public static void aheadChecker(int aheadRow, int aheadCol, ChessBoard board, Collection<ChessMove> moves, ChessPosition position){
+        if (aheadRow >= 1 && aheadRow <= 8 && aheadCol >= 1 && aheadCol <= 8) {
+            ChessPosition aheadPosition = new ChessPosition(aheadRow, aheadCol);
+            ChessPiece myPiece = board.getPiece(position);
+            ChessPiece aheadPiece = board.getPiece(aheadPosition);
+            if (aheadPiece == null || aheadPiece.getTeamColor() != myPiece.pieceColor) {
+                moves.add(new ChessMove(position, aheadPosition, null));
+            }
+        }
+    }
     private Collection<ChessMove> knightCalc(ChessBoard board, ChessPosition position) {
         Collection<ChessMove> moves = new ArrayList<>();
         int[][] jumps = {
@@ -137,13 +147,7 @@ public class ChessPiece {
         for (int[] jump : jumps) {
             int aheadRow = position.getRow() + jump[0];
             int aheadCol = position.getColumn() + jump[1];
-            if (aheadRow >= 1 && aheadRow <= 8 && aheadCol >= 1 && aheadCol <= 8) {
-                ChessPosition aheadPosition = new ChessPosition(aheadRow, aheadCol);
-                ChessPiece aheadPiece = board.getPiece(aheadPosition);
-                if (aheadPiece == null || aheadPiece.getTeamColor() != this.pieceColor) {
-                    moves.add(new ChessMove(position, aheadPosition, null));
-                }
-            }
+            aheadChecker(aheadRow, aheadCol, board, moves, position);
         }
 
         return moves;
@@ -157,13 +161,7 @@ public class ChessPiece {
                 }
                 int aheadRow = position.getRow() + rowOffset;
                 int aheadCol = position.getColumn() + colOffset;
-                if (aheadRow >= 1 && aheadRow <= 8 && aheadCol >= 1 && aheadCol <= 8) {
-                    ChessPosition aheadPosition = new ChessPosition(aheadRow, aheadCol);
-                    ChessPiece aheadPiece = board.getPiece(aheadPosition);
-                    if (aheadPiece == null || aheadPiece.getTeamColor() != this.pieceColor) {
-                        moves.add(new ChessMove(position, aheadPosition, null));
-                    }
-                }
+                aheadChecker(aheadRow, aheadCol, board, moves, position);
             }
         }
         return moves;
