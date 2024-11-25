@@ -3,8 +3,8 @@ import chess.*;
 import static ui.EscapeSequences.*;
 
 public class PrintBoard {
-    private static final String EMPTY = "   ";
-    private static ChessBoard board;
+    private static final String EMPTY = " \u2003 ";
+    private final ChessBoard board;
 
     public PrintBoard(ChessBoard board){
         this.board = board;
@@ -53,38 +53,38 @@ public class PrintBoard {
         }
         return null;
     }
-    public static void drawing(int row, int col){
+    public static void drawing(int row, int col, ChessBoard board){
         if (row == 0 || col == 0 || row == 9 || col == 9) {
             System.out.print(SET_BG_COLOR_WHITE);
             if ((row > 0 && row < 9 && col == 9) || (row > 0 && row < 9 && col == 0)) {
-                System.out.print(" " + (row) + " ");
+                System.out.print("\u2003" + (row) + " ");
             }
             else if ((col > 0 && col < 9 && row == 0) || (col > 0 && col < 9 && row == 9)) {
                 char column = (char) ('h' + 1 - col);
-                System.out.print(" " + column + " ");
+                System.out.print("\u2003" + column + " ");
             }
             else {
                 System.out.print(EMPTY);
             }
         }
         else {
-            ChessPosition position = new ChessPosition(row - 1, col - 1);
+            ChessPosition position = new ChessPosition(row, col);
             ChessPiece piece = board.getPiece(position);
             if (piece != null) {
                 if ((row + col) % 2 == 0) {
-                    System.out.print(SET_BG_COLOR_GREEN);
-                } else {
                     System.out.print(SET_BG_COLOR_YELLOW);
+                } else {
+                    System.out.print(SET_BG_COLOR_GREEN);
                 }
                 System.out.print(getType(board.getPiece(position)));
             }
             else {
                 if ((row + col) % 2 != 0) {
-                    System.out.print(SET_BG_COLOR_YELLOW);
+                    System.out.print(SET_BG_COLOR_GREEN);
                     System.out.print(EMPTY);
                 }
                 else {
-                    System.out.print(SET_BG_COLOR_GREEN);
+                    System.out.print(SET_BG_COLOR_YELLOW);
                     System.out.print(EMPTY);
                 }
             }
@@ -95,7 +95,7 @@ public class PrintBoard {
         while (row < 10) {
             int col = 0;
             while (col < 10) {
-                drawing(row, col);
+                drawing(row, col, board);
                 col++;
             }
             System.out.print(RESET_BG_COLOR);
@@ -108,7 +108,7 @@ public class PrintBoard {
         while (row >= 0) {
             int col = 9;
             while (col >= 0) {
-                drawing(row,col);
+                drawing(row,col, board);
                 col--;
             }
             System.out.print(RESET_BG_COLOR);

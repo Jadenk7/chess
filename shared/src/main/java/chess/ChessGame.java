@@ -39,7 +39,8 @@ public class ChessGame {
      */
     public enum TeamColor {
         WHITE,
-        BLACK
+        BLACK,
+        SPECTATOR
     }
 
     public void moveIt(ChessBoard board, ChessMove move) {

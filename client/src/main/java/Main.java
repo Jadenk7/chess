@@ -103,10 +103,24 @@ public class Main {
             System.out.println("<Successfully Joined Game>");
             ChessBoard board = new ChessBoard();
             board.resetBoard();
-            PrintBoard.drawForPlayer1(board);
-            System.out.println();
             PrintBoard.drawForPlayer2(board);
+            System.out.println();
+            PrintBoard.drawForPlayer1(board);
+            loggedInCommands(server);
         }
+    }
+    private static ChessGame.TeamColor spectate(Scanner scanner) {
+        ChessGame.TeamColor color = null;
+        int validator = 0;
+        while (validator == 0) {
+            System.out.println("Type in: \"spectator\"");
+            String selected = scanner.nextLine();
+            if (selected.equals("spectator")) {
+                color = ChessGame.TeamColor.SPECTATOR;
+                validator++;
+            }
+        }
+        return color;
     }
     private static ChessGame.TeamColor selectTeamColor(Scanner scanner) {
         ChessGame.TeamColor color = null;
@@ -126,28 +140,30 @@ public class Main {
     }
     private static void handleObserveGame(ServerFacade server) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        int gameID;
+        ChessGame.TeamColor color = ChessGame.TeamColor.SPECTATOR;
+        int id;
         try {
             System.out.println("Game ID: ");
-            gameID = scanner.nextInt();
+            id = scanner.nextInt();
         } catch (java.util.InputMismatchException e) {
             System.out.println("Input not accepted");
             scanner.nextLine();
             loggedInCommands(server);
             return;
         }
-        JoinGameRequest request = new JoinGameRequest(null, gameID);
+        JoinGameRequest request = new JoinGameRequest(color, id);
         JoinGameResponse response = server.joinGame(request);
         if (response.getMessage() != null) {
             System.out.println(response.getMessage());
             loggedInCommands(server);
         } else {
-            System.out.println("<Successfully Joined as Observer>");
+            System.out.println("<Successfully Joined Game as Spectator>");
             ChessBoard board = new ChessBoard();
             board.resetBoard();
-            PrintBoard.drawForPlayer1(board);
-            System.out.println();
             PrintBoard.drawForPlayer2(board);
+            System.out.println();
+            PrintBoard.drawForPlayer1(board);
+            loggedInCommands(server);
         }
     }
     private static void handleLogout(ServerFacade server) throws IOException {

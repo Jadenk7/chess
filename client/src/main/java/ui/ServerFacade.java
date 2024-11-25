@@ -16,11 +16,14 @@ import java.util.Map;
 
 public class ServerFacade {
     private String serverUrl;
-    private static Map<Integer, Integer> gameIdMap = new HashMap<>();
+    private HashMap<Integer, Integer> gameIdMap = new HashMap<>();
+
     private static int nextSequentialId = 1;
+
 
     public ServerFacade(int port) {
         this.serverUrl = "http://localhost:" + port;
+        preloadGames();
     }
 
     public RegResponse register(RegRequest req) throws IOException {
@@ -49,31 +52,12 @@ public class ServerFacade {
             return resp;
         }
     }
-    public void preloadGames() throws IOException {
-        URL url = new URL(serverUrl + "/game");
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setReadTimeout(5000);
-        conn.setRequestMethod("GET");
-        conn.addRequestProperty("Authorization", TokenPlaceholder.token);
-        conn.connect();
-        InputStream stream;
-        if (HttpURLConnection.HTTP_OK == conn.getResponseCode()) {
-            stream = conn.getInputStream();
-        } else {
-            stream = conn.getErrorStream();
+    public void preloadGames() {
+        try {
+            listgames();
         }
-        try (InputStreamReader streamReader = new InputStreamReader(stream)){
-            ListGamesResponse listGamesResponse = new Gson().fromJson(streamReader, ListGamesResponse.class);
-            if (listGamesResponse != null && listGamesResponse.getGames() != null) {
-                synchronized (gameIdMap) {
-                    for (GameData game : listGamesResponse.getGames()) {
-                        int dbId = game.getID();
-                        if (!gameIdMap.containsKey(dbId)) {
-                            gameIdMap.put(dbId, nextSequentialId++);
-                        }
-                    }
-                }
-            }
+        catch (Exception e){
+            System.out.println(e);
         }
     }
 
@@ -99,13 +83,10 @@ public class ServerFacade {
         }
         if (resp != null && resp.getID() != null) {
             int dbId = resp.getID();
-            synchronized (gameIdMap) {
-                if (!gameIdMap.containsKey(dbId)) {
-                    gameIdMap.put(dbId, nextSequentialId++);
-                }
-                resp.setSequentialId(gameIdMap.get(dbId));
+            gameIdMap.put(nextSequentialId, dbId);
+            resp.setSequentialId(nextSequentialId);
+            nextSequentialId++;
             }
-        }
         return resp;
     }
 
@@ -161,6 +142,14 @@ public class ServerFacade {
     }
 
     public JoinGameResponse joinGame(JoinGameRequest request) throws IOException {
+        listgames();
+        Integer variable = request.getGameID();
+        if (!gameIdMap.containsKey(variable)) {
+            JoinGameResponse errorResponse = new JoinGameResponse();
+            errorResponse.setMessage("Error! No game");
+            return errorResponse;
+        }
+        request.setGameID(gameIdMap.get(variable));
         URL url = new URL(serverUrl + "/game");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setReadTimeout(5000);
@@ -187,7 +176,6 @@ public class ServerFacade {
             return resp;
         }
     }
-
     public ListGamesResponse listgames() throws IOException {
         URL url = new URL(serverUrl + "/game");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -202,19 +190,17 @@ public class ServerFacade {
             InputStreamReader streamReader = new InputStreamReader(stream);
             resp = new Gson().fromJson(streamReader, ListGamesResponse.class);
         }
-
-        // If the response contains a list of games
+        gameIdMap.clear();
         if (resp != null && resp.getGames() != null) {
-            List<GameData> games = (List<GameData>) resp.getGames(); // Assuming ListGamesResponse has a `getGames()` method returning a List<Game>.
-            Map<Integer, Integer> gameIdMap = new HashMap<>(); // Mapping actual game IDs to sequential numbers
+            List<GameData> games = (List<GameData>) resp.getGames();
             int sequentialId = 1;
-
             for (GameData game : games) {
-                int dbId = game.getID(); // Assuming Game has a `getId()` method returning the database number
-                gameIdMap.put(dbId, sequentialId);
-                game.setID(sequentialId); // Overwrite the ID for client response
+                int dbId = game.getID();
+                gameIdMap.put(sequentialId, dbId);
+                game.setID(sequentialId);
                 sequentialId++;
             }
+            nextSequentialId = sequentialId;
         }
         return resp;
     }
