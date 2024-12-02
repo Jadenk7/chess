@@ -44,7 +44,7 @@ public class Server {
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
-        try (Connection conn = DatabaseManager.getConnection()) {
+        try (java.sql.Connection conn = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
                 try (var preparedStatement = conn.prepareStatement(statement)) {
                     preparedStatement.executeUpdate();
@@ -57,6 +57,7 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
         Spark.staticFiles.location("web");
+        Spark.webSocket("/connect", webSocket.class);
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", new ClearHandler());
         Spark.post("/user", new RegisterHandler());
