@@ -117,4 +117,15 @@ public class GameDAO {
             }
         }
     }
+    public void updateGame(GameData game) throws DataAccessException {
+        Connection conn = DatabaseManager.getConnection();
+        try (var preparedStatement = conn.prepareStatement("UPDATE Game SET game =? WHERE gameID=?")) {
+            preparedStatement.setInt(2, game.getID());
+            preparedStatement.setString(1, new Gson().toJson(game.getChessGame()));
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
+    }
 }

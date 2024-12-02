@@ -12,10 +12,17 @@ import java.util.Collection;
 public class ChessGame {
     private ChessBoard checkers;
     private TeamColor teamSide = TeamColor.WHITE;
+    private boolean isEnded;
+
+    public void setEnd(boolean isEnded) {
+        this.isEnded=isEnded;
+    }
+
 
     public ChessGame() {
         this.checkers = new ChessBoard();
         checkers.resetBoard();
+        isEnded = false;
     }
 
     /**
@@ -247,4 +254,11 @@ public class ChessGame {
     public ChessBoard getBoard() {
         return checkers;
     }
+    public void resign(){
+        setEnd(true);
+    }
+    public boolean gameOver(){
+        return isEnded;
+    }
+
 }
