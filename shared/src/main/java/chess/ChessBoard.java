@@ -8,6 +8,9 @@ public class ChessBoard {
     public ChessBoard() {
         
     }
+    public ChessBoard(boolean res) {
+        resetBoard();
+    }
     public void addPiece(ChessPosition position, ChessPiece piece) {
         checkers[position.getRow()-1][position.getColumn()-1] = piece;
     }

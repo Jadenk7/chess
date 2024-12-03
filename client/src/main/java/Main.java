@@ -25,7 +25,7 @@ import javax.websocket.DeploymentException;
 
 public class Main implements NotificationHandler {
     private static int gameID;
-    private static ChessBoard chessBoard = new ChessBoard();
+    private static ChessBoard chessBoard = new ChessBoard(true);
 
     private static void loggedInCommands(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         System.out.println();
@@ -423,10 +423,10 @@ public class Main implements NotificationHandler {
                     break;
                 case LOAD_GAME:
                     loadGameMessage load_game = new Gson().fromJson(message, loadGameMessage.class);
-                    ChessBoard board = load_game.getGame().getChessGame().getBoard();
-                    PrintBoard.drawForPlayer2(board);
+                    chessBoard = load_game.getGame().getChessGame().getBoard();
+                    PrintBoard.drawForPlayer2(chessBoard);
                     System.out.println();
-                    PrintBoard.drawForPlayer1(board);
+                    PrintBoard.drawForPlayer1(chessBoard);
                     System.out.print("\n");
                     break;
             }
