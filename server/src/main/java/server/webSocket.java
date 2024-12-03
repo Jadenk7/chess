@@ -80,10 +80,18 @@ public class webSocket {
     private void makeMoveHandler(makeMoveCommand command, Session session) throws DataAccessException, InvalidMoveException, IOException {
         AuthDAO auth = new AuthDAO();
         AuthData token = auth.returnToken(command.getAuthToken());
+        if (token == null) {
+            session.getRemote().sendString(new Gson().toJson(new errorMessage("Error: Invalid auth token")));
+            return;
+        }
         String username = token.getName();
         GameDAO dao = new GameDAO();
         int gameID = command.getGameID();
         GameData game = dao.returnGame(gameID);
+        if (game == null) {
+            session.getRemote().sendString(new Gson().toJson(new errorMessage("Error: Game not found")));
+            return;
+        }
         ChessGame chessGame = game.getChessGame();
         if(chessGame.isInStalemate(chessGame.getTeamTurn()) || chessGame.isInCheckmate(chessGame.getTeamTurn()) || chessGame.gameOver()){
             session.getRemote().sendString(new Gson().toJson(new errorMessage("Error!")));

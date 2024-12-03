@@ -14,7 +14,7 @@ public class WebSocketFacade extends Endpoint{
     public WebSocketFacade(String url, NotificationHandler notification) throws ResponseException, DeploymentException, IOException, URISyntaxException {
         try{
             url = url.replace("http", "ws");
-            URI socketURI = new URI(url + "/connect");
+            URI socketURI = new URI(url + "/ws");
             this.notification = notification;
             WebSocketContainer container = ContainerProvider.getWebSocketContainer();
             this.session = container.connectToServer(this, socketURI);
