@@ -101,6 +101,8 @@ public class ServiceUnitTests {
         RegRequest request = new RegRequest(ME.getName(), ME.getPassword(), ME.getEmail());
         RegisterService service = new RegisterService();
         RegResponse response = service.registration(request);
+        RegRequest request2 = new RegRequest("Joners", "FerariMan", "cool");
+        RegResponse response2 = service.registration(request2);
         CreateGameService creationService = new CreateGameService();
         CreateGameRequest creationRequest = new CreateGameRequest("Game!");
         CreateGameResponse creationResponse = creationService.gameCreator(creationRequest, response.getAuth());
@@ -110,9 +112,9 @@ public class ServiceUnitTests {
         JoinGameRequest whiteRequest = new JoinGameRequest(ChessGame.TeamColor.WHITE, creationResponse.getID());
         JoinGameService joiner = new JoinGameService();
         JoinGameResponse otherBlackResponse = joiner.joinGame(otherBlackRequest, response.getAuth());
-        JoinGameResponse blackResponse = joiner.joinGame(blackRequest, response.getAuth());
+        JoinGameResponse blackResponse = joiner.joinGame(blackRequest, response2.getAuth());
         JoinGameResponse otherWhiteResponse = joiner.joinGame(otherWhiteRequest, response.getAuth());
-        JoinGameResponse whiteResponse = joiner.joinGame(whiteRequest, response.getAuth());
+        JoinGameResponse whiteResponse = joiner.joinGame(whiteRequest, response2.getAuth());
         Assertions.assertEquals("Error! Color is taken", blackResponse.getMessage());
         Assertions.assertEquals("Error! Color is taken", whiteResponse.getMessage());
     }

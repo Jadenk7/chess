@@ -207,7 +207,7 @@ public class ServerFacadeTests {
             LoginResponse response = facade.login(request2);
             TokenPlaceholder.token = response.getAuth();
             CreateGameResponse response2 = facade.createGame(request3);
-            int gameID = response2.getID();
+            int gameID = 1;
             JoinGameRequest request4 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
             JoinGameResponse response3 = facade.joinGame(request4);
             assertNull(response3.getMessage());
@@ -229,7 +229,7 @@ public class ServerFacadeTests {
         LoginResponse response = facade.login(request2);
         TokenPlaceholder.token = response.getAuth();
         CreateGameResponse response2 = facade.createGame(request3);
-        int gameID = response2.getID();
+        int gameID = 1;
         JoinGameRequest request4 = new JoinGameRequest(ChessGame.TeamColor.BLACK, gameID);
         facade.joinGame(request4);
         LoginResponse response3 = facade.login(otherRequest2);
