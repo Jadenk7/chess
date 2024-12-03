@@ -1,15 +1,33 @@
 import chess.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import exception.ResponseException;
 import requestandresponse.*;
+import serverMessages.errorMessage;
+import serverMessages.loadGameMessage;
+import serverMessages.notificationMessage;
 import ui.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.Scanner;
 import model.*;
-public class Main {
+import webSocketClient.NotificationHandler;
+import webSocketClient.WebSocketFacade;
+import websocket.messages.ServerMessage;
 
-    private static void loggedInCommands(ServerFacade server) throws IOException {
+import javax.websocket.DeploymentException;
+
+public class Main implements NotificationHandler {
+    private static int gameID;
+    private static ChessBoard chessBoard = new ChessBoard();
+
+    private static void loggedInCommands(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         System.out.println();
         displayLoggedInMenu();
         Scanner scanner = new Scanner(System.in);
@@ -17,26 +35,26 @@ public class Main {
         scanner.nextLine();
         switch (command) {
             case "list":
-                handleListGames(server);
+                handleListGames(server, port);
                 break;
             case "create":
-                handleCreateGame(server);
+                handleCreateGame(server, port);
                 break;
             case "join":
-                handleJoinGame(server);
+                handleJoinGame(server, port);
                 break;
             case "observe":
-                handleObserveGame(server);
+                handleObserveGame(server, port);
                 break;
             case "help":
-                loggedInCommands(server);
+                loggedInCommands(server, port);
                 break;
             case "logout":
                 handleLogout(server);
                 break;
             default:
                 System.out.println("<Command not accepted>");
-                loggedInCommands(server);
+                loggedInCommands(server, port);
                 break;
         }
     }
@@ -49,7 +67,7 @@ public class Main {
         System.out.println("\"logout\" - to log out");
     }
 
-    private static void handleListGames(ServerFacade server) throws IOException {
+    private static void handleListGames(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         ListGamesResponse resp = server.listgames();
         if (resp.getMessage() != null) {
             System.out.println(resp.getMessage());
@@ -63,9 +81,9 @@ public class Main {
                 System.out.println("Black Player: " + game.getBlackUsername());
             }
         }
-        loggedInCommands(server);
+        loggedInCommands(server, port);
     }
-    private static void handleCreateGame(ServerFacade server) throws IOException {
+    private static void handleCreateGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Name of your new Game:");
         String name = scanner.nextLine();
@@ -78,35 +96,35 @@ public class Main {
             System.out.println("Game ID: " + response.getSequentialId());
             System.out.println();
         }
-        loggedInCommands(server);
+        loggedInCommands(server, port);
     }
+    private static NotificationHandler notificationHandler = new Main();
 
-    private static void handleJoinGame(ServerFacade server) throws IOException {
+    private static void handleJoinGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         ChessGame.TeamColor color = selectTeamColor(scanner);
         int id;
         try {
             System.out.println("Game ID: ");
             id = scanner.nextInt();
+            gameID = id;
         } catch (java.util.InputMismatchException e) {
             System.out.println("Input not accepted");
             scanner.nextLine();
-            loggedInCommands(server);
+            loggedInCommands(server, port);
             return;
         }
         JoinGameRequest request = new JoinGameRequest(color, id);
         JoinGameResponse response = server.joinGame(request);
         if (response.getMessage() != null) {
             System.out.println(response.getMessage());
-            loggedInCommands(server);
+            loggedInCommands(server, port);
         } else {
             System.out.println("<Successfully Joined Game>");
-            ChessBoard board = new ChessBoard();
-            board.resetBoard();
-            PrintBoard.drawForPlayer2(board);
-            System.out.println();
-            PrintBoard.drawForPlayer1(board);
-            loggedInCommands(server);
+            WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:" + port, notificationHandler);
+            webSocketFacade.connect(TokenPlaceholder.token, color, id);
+            System.out.println("\n");
+            gamePlay(server, port);
         }
     }
     private static ChessGame.TeamColor spectate(Scanner scanner) {
@@ -138,7 +156,7 @@ public class Main {
         }
         return color;
     }
-    private static void handleObserveGame(ServerFacade server) throws IOException {
+    private static void handleObserveGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         ChessGame.TeamColor color = ChessGame.TeamColor.SPECTATOR;
         int id;
@@ -148,22 +166,20 @@ public class Main {
         } catch (java.util.InputMismatchException e) {
             System.out.println("Input not accepted");
             scanner.nextLine();
-            loggedInCommands(server);
+            loggedInCommands(server, port);
             return;
         }
         JoinGameRequest request = new JoinGameRequest(color, id);
         JoinGameResponse response = server.joinGame(request);
         if (response.getMessage() != null) {
             System.out.println(response.getMessage());
-            loggedInCommands(server);
+            loggedInCommands(server, port);
         } else {
             System.out.println("<Successfully Joined Game as Spectator>");
-            ChessBoard board = new ChessBoard();
-            board.resetBoard();
-            PrintBoard.drawForPlayer2(board);
-            System.out.println();
-            PrintBoard.drawForPlayer1(board);
-            loggedInCommands(server);
+            WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:" + port, notificationHandler);
+            webSocketFacade.connect(TokenPlaceholder.token, color, id);
+            System.out.println("\n");
+            gamePlay(server, port);
         }
     }
     private static void handleLogout(ServerFacade server) throws IOException {
@@ -183,7 +199,7 @@ public class Main {
         System.out.println("\"help\" - to list possible commands");
         System.out.println("\"quit\" - to quit your game");
     }
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         Properties properties = new Properties();
         try (FileInputStream in = new FileInputStream("server.properties")) {
             properties.load(in);
@@ -212,7 +228,7 @@ public class Main {
                 else{
                     TokenPlaceholder.token = resp.getAuth();
                     System.out.println("<Successful Registration>");
-                    loggedInCommands(server);
+                    loggedInCommands(server, port);
                 }
             }
             else if (input.equals("login")) {
@@ -229,7 +245,7 @@ public class Main {
                 else{
                     TokenPlaceholder.token = resp.getAuth();
                     System.out.println("<Successful Login>");
-                    loggedInCommands(server);
+                    loggedInCommands(server, port);
                 }
             }
             else if (input.equals("help")) {
@@ -246,6 +262,177 @@ public class Main {
                 System.out.println("<Command not accepted> ");
                 listCommands();
             }
+        }
+    }
+    private static void gamePlay(ServerFacade server, int port) throws ResponseException, DeploymentException, IOException, URISyntaxException {
+        System.out.print("\n");
+        System.out.println("\"help\" - for list of possible commands");
+        System.out.println("\"redraw\" chess board");
+        System.out.println("\"leave\" game");
+        System.out.println("\"make\" move");
+        System.out.println("\"resign\" game");
+        System.out.println("\"highlight\" legal moves");
+        WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:" + port, notificationHandler);
+        Scanner s = new Scanner(System.in);
+        String command = s.next();
+        s.nextLine();
+
+        switch(command){
+            case "help":
+                gamePlay(server, port);
+                break;
+            case "redraw":
+                PrintBoard.drawForPlayer2(chessBoard);
+                System.out.println();
+                PrintBoard.drawForPlayer1(chessBoard);
+                gamePlay(server, port);
+                break;
+            case "leave":
+                webSocketFacade.leave(TokenPlaceholder.token, gameID);
+                loggedInCommands(server, port);
+                break;
+            case "resign":
+                webSocketFacade.resign(TokenPlaceholder.token, gameID);
+                loggedInCommands(server, port);
+                break;
+            case "highlight":
+                loggedInCommands(server, port);
+                break;
+            case "make":
+                String startPosition = "  ";
+                if (startPosition.length() == 2) {
+                    boolean validStart = false;
+                    while (!validStart) {
+                        System.out.println("Enter the starting position: (Ex. a1)");
+                        startPosition = s.nextLine();
+                        char startColumnLetter = startPosition.charAt(0);
+                        int startColumnNumber = startColumnLetter - 'a';
+
+                        int startRowNumber;
+                        try {
+                            startRowNumber = Character.getNumericValue(startPosition.charAt(1)) - 1;
+                            switch(startColumnNumber){
+                                case 0:
+                                    startColumnNumber = 7;
+                                    break;
+                                case 1:
+                                    startColumnNumber = 6;
+                                    break;
+                                case 2:
+                                    startColumnNumber = 5;
+                                    break;
+                                case 3:
+                                    startColumnNumber = 4;
+                                    break;
+                                case 4:
+                                    startColumnNumber = 3;
+                                    break;
+                                case 5:
+                                    startColumnNumber = 2;
+                                    break;
+                                case 6:
+                                    startColumnNumber = 1;
+                                    break;
+                                case 7:
+                                    startColumnNumber = 0;
+                                    break;
+                            }
+                            if (startColumnNumber >= 0 && startColumnNumber <= 7 && startRowNumber >= 0 && startRowNumber <= 7) {
+                                System.out.println("Enter the end position: (Ex. a1)");
+                                String endPosition = s.nextLine();
+                                if (endPosition.length() == 2) {
+                                    char endColumnLetter = endPosition.charAt(0);
+                                    int endColumnNumber = endColumnLetter - 'a';
+                                    int endRowNumber;
+                                    try {
+                                        endRowNumber = Character.getNumericValue(endPosition.charAt(1)) -1;
+                                        switch(endColumnNumber){
+                                            case 0:
+                                                endColumnNumber = 7;
+                                                break;
+                                            case 1:
+                                                endColumnNumber = 6;
+                                                break;
+                                            case 2:
+                                                endColumnNumber = 5;
+                                                break;
+                                            case 3:
+                                                endColumnNumber = 4;
+                                                break;
+                                            case 4:
+                                                endColumnNumber = 3;
+                                                break;
+                                            case 5:
+                                                endColumnNumber = 2;
+                                                break;
+                                            case 6:
+                                                endColumnNumber = 1;
+                                                break;
+                                            case 7:
+                                                endColumnNumber = 0;
+                                                break;
+                                        }
+                                        if (endColumnNumber >= 0 && endColumnNumber <= 7 && endRowNumber >= 0 && endRowNumber <= 7) {
+                                            ChessPosition startingPosition = new ChessPosition(startRowNumber, startColumnNumber);
+                                            ChessPosition endingPosition = new ChessPosition(endRowNumber, endColumnNumber);
+                                            ChessMove move = new ChessMove(startingPosition, endingPosition, null);
+                                            webSocketFacade.makeMove(TokenPlaceholder.token, gameID, move);
+                                        } else {
+                                            System.out.println("Invalid end position. Column and row must be in range (a-h) and (1-8).");
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        System.out.println("Invalid end row number. Please enter a number (1-8).");
+                                        gamePlay(server,port);
+                                    }
+                                } else {
+                                    System.out.println("Invalid input for end position. Please enter a valid position. 1. (a-h) 2. (1-8)");
+                                }
+
+                                validStart = true;
+                            } else {
+                                System.out.println("Invalid starting position. Column and row must be in range (a-h) and (1-8).");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid starting row number. Please enter a number (1-8).");
+                            gamePlay(server, port);
+                        }
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a valid position. 1. (a-h) 2. (1-8)");
+                }
+                gamePlay(server, port);
+                break;
+            default:
+                System.out.println("Invalid Command");
+                gamePlay(server, port);
+                break;
+        }
+    }
+    @Override
+    public void notify(String message) {
+        try{
+            ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
+            switch(serverMessage.getServerMessageType()) {
+                case ERROR:
+                    errorMessage error_message=new Gson().fromJson(message, errorMessage.class);
+                    System.out.println(error_message.getErrorMessage());
+                    break;
+                case NOTIFICATION:
+                    notificationMessage notification_message=new Gson().fromJson(message, notificationMessage.class);
+                    System.out.println(notification_message.getMessage());
+                    break;
+                case LOAD_GAME:
+                    loadGameMessage load_game = new Gson().fromJson(message, loadGameMessage.class);
+                    ChessBoard board = load_game.getGame().getChessGame().getBoard();
+                    PrintBoard.drawForPlayer2(board);
+                    System.out.println();
+                    PrintBoard.drawForPlayer1(board);
+                    System.out.print("\n");
+                    break;
+            }
+        }
+        catch(RuntimeException e){
+            e.printStackTrace();
         }
     }
     }
