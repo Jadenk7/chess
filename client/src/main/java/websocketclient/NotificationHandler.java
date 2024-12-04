@@ -1,4 +1,4 @@
-package webSocketClient;
+package websocketclient;
 public interface NotificationHandler {
     void notify(String message);
 }

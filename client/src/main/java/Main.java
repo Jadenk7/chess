@@ -1,24 +1,20 @@
 import chess.*;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import exception.ResponseException;
 import requestandresponse.*;
-import serverMessages.errorMessage;
-import serverMessages.loadGameMessage;
-import serverMessages.notificationMessage;
+import servermessages.ErrorMessage;
+import servermessages.LoadGameMessage;
+import servermessages.NotificationMessage;
 import ui.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.util.Properties;
 import java.util.Scanner;
 import model.*;
-import webSocketClient.NotificationHandler;
-import webSocketClient.WebSocketFacade;
+import websocketclient.NotificationHandler;
+import websocketclient.WebSocketFacade;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.DeploymentException;
@@ -27,7 +23,8 @@ public class Main implements NotificationHandler {
     private static int gameID;
     private static ChessBoard chessBoard = new ChessBoard(true);
 
-    private static void loggedInCommands(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
+    private static void loggedInCommands(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException,
+            URISyntaxException {
         System.out.println();
         displayLoggedInMenu();
         Scanner scanner = new Scanner(System.in);
@@ -67,7 +64,8 @@ public class Main implements NotificationHandler {
         System.out.println("\"logout\" - to log out");
     }
 
-    private static void handleListGames(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
+    private static void handleListGames(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException,
+            URISyntaxException {
         ListGamesResponse resp = server.listgames();
         if (resp.getMessage() != null) {
             System.out.println(resp.getMessage());
@@ -83,7 +81,8 @@ public class Main implements NotificationHandler {
         }
         loggedInCommands(server, port);
     }
-    private static void handleCreateGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
+    private static void handleCreateGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException,
+            URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Name of your new Game:");
         String name = scanner.nextLine();
@@ -127,19 +126,6 @@ public class Main implements NotificationHandler {
             gamePlay(server, port);
         }
     }
-    private static ChessGame.TeamColor spectate(Scanner scanner) {
-        ChessGame.TeamColor color = null;
-        int validator = 0;
-        while (validator == 0) {
-            System.out.println("Type in: \"spectator\"");
-            String selected = scanner.nextLine();
-            if (selected.equals("spectator")) {
-                color = ChessGame.TeamColor.SPECTATOR;
-                validator++;
-            }
-        }
-        return color;
-    }
     private static ChessGame.TeamColor selectTeamColor(Scanner scanner) {
         ChessGame.TeamColor color = null;
         int validator = 0;
@@ -156,7 +142,8 @@ public class Main implements NotificationHandler {
         }
         return color;
     }
-    private static void handleObserveGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException, URISyntaxException {
+    private static void handleObserveGame(ServerFacade server, int port) throws IOException, ResponseException, DeploymentException,
+            URISyntaxException {
         Scanner scanner = new Scanner(System.in);
         ChessGame.TeamColor color = ChessGame.TeamColor.SPECTATOR;
         int id;
@@ -414,16 +401,16 @@ public class Main implements NotificationHandler {
             ServerMessage serverMessage = new Gson().fromJson(message, ServerMessage.class);
             switch(serverMessage.getServerMessageType()) {
                 case ERROR:
-                    errorMessage error_message=new Gson().fromJson(message, errorMessage.class);
-                    System.out.println(error_message.getErrorMessage());
+                    ErrorMessage errorMessage = new Gson().fromJson(message, ErrorMessage.class);
+                    System.out.println(errorMessage.getErrorMessage());
                     break;
                 case NOTIFICATION:
-                    notificationMessage notification_message=new Gson().fromJson(message, notificationMessage.class);
-                    System.out.println(notification_message.getMessage());
+                    NotificationMessage notificationMessage = new Gson().fromJson(message, NotificationMessage.class);
+                    System.out.println(notificationMessage.getMessage());
                     break;
                 case LOAD_GAME:
-                    loadGameMessage load_game = new Gson().fromJson(message, loadGameMessage.class);
-                    chessBoard = load_game.getGame().getChessGame().getBoard();
+                    LoadGameMessage loadGame = new Gson().fromJson(message, LoadGameMessage.class);
+                    chessBoard = loadGame.getGame().getChessGame().getBoard();
                     PrintBoard.drawForPlayer2(chessBoard);
                     System.out.println();
                     PrintBoard.drawForPlayer1(chessBoard);

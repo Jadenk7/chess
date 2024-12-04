@@ -5,7 +5,4 @@ public class ResponseException extends Exception {
         super(message);
         this.status = status;
     }
-    public int StatusCode() {
-        return status;
-    }
 }

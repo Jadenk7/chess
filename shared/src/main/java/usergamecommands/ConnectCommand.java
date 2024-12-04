@@ -1,9 +1,9 @@
-package userGameCommands;
+package usergamecommands;
 import chess.ChessGame;
 import websocket.commands.UserGameCommand;
-public class connectCommand extends UserGameCommand {
+public class ConnectCommand extends UserGameCommand {
     private ChessGame.TeamColor playerColor;
-    public connectCommand(String authToken, ChessGame.TeamColor color, Integer gameID) {
+    public ConnectCommand(String authToken, ChessGame.TeamColor color, Integer gameID) {
         super(CommandType.CONNECT, authToken, gameID);
         this.playerColor=color;
     }
