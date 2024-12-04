@@ -119,7 +119,7 @@ public class GameDAO {
     }
     public void updateGame(GameData game) throws DataAccessException {
         Connection conn = DatabaseManager.getConnection();
-        try (var preparedStatement = conn.prepareStatement("UPDATE Game SET game =?, whiteUsername = ?, blackUsername = ? WHERE gameID=?")) {
+        try (var preparedStatement = conn.prepareStatement("UPDATE game SET game =?, whiteUsername = ?, blackUsername = ? WHERE gameID=?")) {
             preparedStatement.setString(1, new Gson().toJson(game.getChessGame()));
             if (game.getWhiteUsername() != null) {
                 preparedStatement.setString(2, game.getWhiteUsername());
