@@ -288,18 +288,22 @@ public class Main implements NotificationHandler {
         PrintBoard.drawForPlayer1(chessBoard);
         System.out.println();
     }
-    private static void handleLeave(WebSocketFacade webSocketFacade, ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+    private static void handleLeave(WebSocketFacade webSocketFacade, ServerFacade server, int port)
+            throws ResponseException, IOException, DeploymentException, URISyntaxException {
         webSocketFacade.leave(TokenPlaceholder.token, gameID);
         loggedInCommands(server, port);
     }
-    private static void handleResign(WebSocketFacade webSocketFacade, ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+    private static void handleResign(WebSocketFacade webSocketFacade, ServerFacade server, int port)
+            throws ResponseException, IOException, DeploymentException, URISyntaxException {
         webSocketFacade.resign(TokenPlaceholder.token, gameID);
         loggedInCommands(server, port);
     }
-    private static void handleHighlight(ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+    private static void handleHighlight(ServerFacade server, int port)
+            throws ResponseException, IOException, DeploymentException, URISyntaxException {
         loggedInCommands(server, port);
     }
-    private static void handleMakeMove(WebSocketFacade webSocketFacade, ServerFacade server, int port, Scanner s) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+    private static void handleMakeMove(WebSocketFacade webSocketFacade, ServerFacade server, int port, Scanner s)
+            throws ResponseException, IOException, DeploymentException, URISyntaxException {
         String startPosition = getInputPosition("Enter the starting position: (Ex. a1)", s);
 
         if (startPosition == null) {
