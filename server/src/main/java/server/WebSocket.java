@@ -7,6 +7,8 @@ import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import model.AuthData;
 import model.GameData;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import servermessages.*;
 import usergamecommands.*;
 import websocket.messages.ServerMessage;
@@ -39,6 +41,10 @@ public class WebSocket {
         catch (InvalidMoveException e) {
             throw new RuntimeException(e);
         }
+    }
+    @OnWebSocketError
+    public void onError(Session session, Throwable throwable) {
+        System.err.println("Server threw an error " + throwable.getMessage());
     }
     private void gameLoader(Session session, GameData game) throws IOException {
         Gson gson = new Gson();
