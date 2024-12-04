@@ -25,21 +25,25 @@ public class WebSocket {
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, DataAccessException {
-        UserGameCommand gameCom = new Gson().fromJson(message, UserGameCommand.class);
-        ConnectCommand connectCom = new Gson().fromJson(message, ConnectCommand.class);
-        MakeMoveCommand moveCom = new Gson().fromJson(message, MakeMoveCommand.class);
-        LeaveCommand leaveCom = new Gson().fromJson(message, LeaveCommand.class);
-        ResignCommand resignCom = new Gson().fromJson(message, ResignCommand.class);
         try {
-            switch (gameCom.getCommandType()) {
-                case CONNECT -> connectHandler(connectCom, session);
-                case MAKE_MOVE -> makeMoveHandler(moveCom, session);
-                case LEAVE -> leaveHandler(leaveCom, session);
-                case RESIGN -> resignHandler(resignCom, session);
+            UserGameCommand gameCom = new Gson().fromJson(message, UserGameCommand.class);
+            ConnectCommand connectCom = new Gson().fromJson(message, ConnectCommand.class);
+            MakeMoveCommand moveCom = new Gson().fromJson(message, MakeMoveCommand.class);
+            LeaveCommand leaveCom = new Gson().fromJson(message, LeaveCommand.class);
+            ResignCommand resignCom = new Gson().fromJson(message, ResignCommand.class);
+            try {
+                switch (gameCom.getCommandType()) {
+                    case CONNECT -> connectHandler(connectCom, session);
+                    case MAKE_MOVE -> makeMoveHandler(moveCom, session);
+                    case LEAVE -> leaveHandler(leaveCom, session);
+                    case RESIGN -> resignHandler(resignCom, session);
+                }
+            } catch (InvalidMoveException e) {
+                throw new RuntimeException(e);
             }
         }
-        catch (InvalidMoveException e) {
-            throw new RuntimeException(e);
+        catch (Throwable throwable) {
+            System.err.println("Server threw an error " + throwable.getMessage());
         }
     }
     @OnWebSocketError
