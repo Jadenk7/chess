@@ -136,10 +136,10 @@ public class webSocket {
         GameDAO dao = new GameDAO();
         GameData game = dao.returnGame(gameID);
         if (game != null) {
-            if (game.getWhiteUsername().equals(username) && game.getWhiteUsername() != null) {
+            if (game.getWhiteUsername() != null && game.getWhiteUsername().equals(username)) {
                 game.setWhiteUsername(null);
             }
-            else if (game.getBlackUsername().equals(username) && game.getBlackUsername() != null) {
+            else if (game.getBlackUsername() != null && game.getBlackUsername().equals(username)) {
                 game.setBlackUsername(null);
             }
             dao.updateGame(game);
