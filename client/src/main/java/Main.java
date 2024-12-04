@@ -305,100 +305,100 @@ public class Main implements NotificationHandler {
                     while (!validStart) {
                         System.out.println("Enter the starting position: (Ex. a1)");
                         startPosition = s.nextLine();
-                        char startColumnLetter = startPosition.charAt(0);
-                        int startColumnNumber = startColumnLetter - 'a';
+                        char startColLetter = startPosition.charAt(0);
+                        int startColNumber = startColLetter - 'a';
 
                         int startRowNumber;
                         try {
                             startRowNumber = Character.getNumericValue(startPosition.charAt(1)) - 1;
-                            switch(startColumnNumber){
+                            switch(startColNumber){
                                 case 0:
-                                    startColumnNumber = 7;
+                                    startColNumber = 7;
                                     break;
                                 case 1:
-                                    startColumnNumber = 6;
+                                    startColNumber = 6;
                                     break;
                                 case 2:
-                                    startColumnNumber = 5;
+                                    startColNumber = 5;
                                     break;
                                 case 3:
-                                    startColumnNumber = 4;
+                                    startColNumber = 4;
                                     break;
                                 case 4:
-                                    startColumnNumber = 3;
+                                    startColNumber = 3;
                                     break;
                                 case 5:
-                                    startColumnNumber = 2;
+                                    startColNumber = 2;
                                     break;
                                 case 6:
-                                    startColumnNumber = 1;
+                                    startColNumber = 1;
                                     break;
                                 case 7:
-                                    startColumnNumber = 0;
+                                    startColNumber = 0;
                                     break;
                             }
-                            if (startColumnNumber >= 0 && startColumnNumber <= 7 && startRowNumber >= 0 && startRowNumber <= 7) {
+                            if (startRowNumber >= 0 && startRowNumber <= 7 && startColNumber >= 0 && startColNumber <= 7) {
                                 System.out.println("Enter the end position: (Ex. a1)");
-                                String endPosition = s.nextLine();
-                                if (endPosition.length() == 2) {
-                                    char endColumnLetter = endPosition.charAt(0);
-                                    int endColumnNumber = endColumnLetter - 'a';
+                                String endPos = s.nextLine();
+                                if (endPos.length() == 2) {
+                                    char endColLetter = endPos.charAt(0);
+                                    int endColNumber = endColLetter - 'a';
                                     int endRowNumber;
                                     try {
-                                        endRowNumber = Character.getNumericValue(endPosition.charAt(1)) -1;
-                                        switch(endColumnNumber){
+                                        endRowNumber = Character.getNumericValue(endPos.charAt(1)) -1;
+                                        switch(endColNumber){
                                             case 0:
-                                                endColumnNumber = 7;
+                                                endColNumber = 7;
                                                 break;
                                             case 1:
-                                                endColumnNumber = 6;
+                                                endColNumber = 6;
                                                 break;
                                             case 2:
-                                                endColumnNumber = 5;
+                                                endColNumber = 5;
                                                 break;
                                             case 3:
-                                                endColumnNumber = 4;
+                                                endColNumber = 4;
                                                 break;
                                             case 4:
-                                                endColumnNumber = 3;
+                                                endColNumber = 3;
                                                 break;
                                             case 5:
-                                                endColumnNumber = 2;
+                                                endColNumber = 2;
                                                 break;
                                             case 6:
-                                                endColumnNumber = 1;
+                                                endColNumber = 1;
                                                 break;
                                             case 7:
-                                                endColumnNumber = 0;
+                                                endColNumber = 0;
                                                 break;
                                         }
-                                        if (endColumnNumber >= 0 && endColumnNumber <= 7 && endRowNumber >= 0 && endRowNumber <= 7) {
-                                            ChessPosition startingPosition = new ChessPosition(startRowNumber, startColumnNumber);
-                                            ChessPosition endingPosition = new ChessPosition(endRowNumber, endColumnNumber);
+                                        if (endColNumber >= 0 && endColNumber <= 7 && endRowNumber >= 0 && endRowNumber <= 7) {
+                                            ChessPosition startingPosition = new ChessPosition(startRowNumber, startColNumber);
+                                            ChessPosition endingPosition = new ChessPosition(endRowNumber, endColNumber);
                                             ChessMove move = new ChessMove(startingPosition, endingPosition, null);
                                             webSocketFacade.makeMove(TokenPlaceholder.token, gameID, move);
                                         } else {
-                                            System.out.println("Invalid end position. Column and row must be in range (a-h) and (1-8).");
+                                            System.out.println("Invalid end position. Enter column (a-h) and row (1-8).");
                                         }
                                     } catch (NumberFormatException e) {
-                                        System.out.println("Invalid end row number. Please enter a number (1-8).");
+                                        System.out.println("Invalid end row number. Must be 1-8.");
                                         gamePlay(server,port);
                                     }
                                 } else {
-                                    System.out.println("Invalid input for end position. Please enter a valid position. 1. (a-h) 2. (1-8)");
+                                    System.out.println("Invalid end position. Enter a valid position: (a-h)(1-8)");
                                 }
 
                                 validStart = true;
                             } else {
-                                System.out.println("Invalid starting position. Column and row must be in range (a-h) and (1-8).");
+                                System.out.println("Invalid starting position. Enter column (a-h) and row (1-8).");
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Invalid starting row number. Please enter a number (1-8).");
+                            System.out.println("Invalid starting row number. Must be 1-8.");
                             gamePlay(server, port);
                         }
                     }
                 } else {
-                    System.out.println("Invalid input. Please enter a valid position. 1. (a-h) 2. (1-8)");
+                    System.out.println("Invalid input. Enter a valid position: (a-h)(1-8)");
                 }
                 gamePlay(server, port);
                 break;
