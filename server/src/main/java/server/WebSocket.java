@@ -147,7 +147,7 @@ public class WebSocket {
             connections.remove(token.getAuth());
             Set<Connection> connectionList = connections.connectionList.get(gameID);
             for(Connection conn: connectionList){
-                if(conn.getUsername().equals(command.getAuthToken()) == false){
+                if(!conn.getUsername().equals(command.getAuthToken())){
                     conn.getSession().getRemote().sendString(new Gson().toJson(new NotificationMessage(username + " left the game")));
                 }
             }
@@ -165,7 +165,7 @@ public class WebSocket {
             session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error!")));
             return;
         }
-        if (game.getWhiteUsername().equals(username) == false && game.getBlackUsername().equals(username) == false) {
+        if (!game.getWhiteUsername().equals(username) && game.getBlackUsername().equals(username) == false) {
             session.getRemote().sendString(new Gson().toJson(new ErrorMessage("Error!")));
             return;
         }
