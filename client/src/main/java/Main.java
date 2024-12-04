@@ -252,6 +252,28 @@ public class Main implements NotificationHandler {
         }
     }
     private static void gamePlay(ServerFacade server, int port) throws ResponseException, DeploymentException, IOException, URISyntaxException {
+        printCommands();
+
+        WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:" + port, notificationHandler);
+        Scanner s = new Scanner(System.in);
+        String command = s.next();
+        s.nextLine();
+
+        switch (command) {
+            case "help" -> gamePlay(server, port);
+            case "redraw" -> handleRedraw();
+            case "leave" -> handleLeave(webSocketFacade, server, port);
+            case "resign" -> handleResign(webSocketFacade, server, port);
+            case "highlight" -> handleHighlight(server, port);
+            case "make" -> handleMakeMove(webSocketFacade, server, port, s);
+            default -> {
+                System.out.println("Invalid Command");
+                gamePlay(server, port);
+            }
+        }
+    }
+
+    private static void printCommands() {
         System.out.print("\n");
         System.out.println("\"help\" - for list of possible commands");
         System.out.println("\"redraw\" chess board");
@@ -259,141 +281,73 @@ public class Main implements NotificationHandler {
         System.out.println("\"make\" move");
         System.out.println("\"resign\" game");
         System.out.println("\"highlight\" legal moves");
-        WebSocketFacade webSocketFacade = new WebSocketFacade("http://localhost:" + port, notificationHandler);
-        Scanner s = new Scanner(System.in);
-        String command = s.next();
-        s.nextLine();
+    }
+    private static void handleRedraw() {
+        PrintBoard.drawForPlayer2(chessBoard);
+        System.out.println();
+        PrintBoard.drawForPlayer1(chessBoard);
+        System.out.println();
+    }
+    private static void handleLeave(WebSocketFacade webSocketFacade, ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+        webSocketFacade.leave(TokenPlaceholder.token, gameID);
+        loggedInCommands(server, port);
+    }
+    private static void handleResign(WebSocketFacade webSocketFacade, ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+        webSocketFacade.resign(TokenPlaceholder.token, gameID);
+        loggedInCommands(server, port);
+    }
+    private static void handleHighlight(ServerFacade server, int port) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+        loggedInCommands(server, port);
+    }
+    private static void handleMakeMove(WebSocketFacade webSocketFacade, ServerFacade server, int port, Scanner s) throws ResponseException, IOException, DeploymentException, URISyntaxException {
+        String startPosition = getInputPosition("Enter the starting position: (Ex. a1)", s);
 
-        switch(command){
-            case "help":
-                gamePlay(server, port);
-                break;
-            case "redraw":
-                PrintBoard.drawForPlayer2(chessBoard);
-                System.out.println();
-                PrintBoard.drawForPlayer1(chessBoard);
-                gamePlay(server, port);
-                break;
-            case "leave":
-                webSocketFacade.leave(TokenPlaceholder.token, gameID);
-                loggedInCommands(server, port);
-                break;
-            case "resign":
-                webSocketFacade.resign(TokenPlaceholder.token, gameID);
-                loggedInCommands(server, port);
-                break;
-            case "highlight":
-                loggedInCommands(server, port);
-                break;
-            case "make":
-                String startPosition = "  ";
-                if (startPosition.length() == 2) {
-                    boolean validStart = false;
-                    while (!validStart) {
-                        System.out.println("Enter the starting position: (Ex. a1)");
-                        startPosition = s.nextLine();
-                        char startColLetter = startPosition.charAt(0);
-                        int startColNumber = startColLetter - 'a';
-
-                        int startRowNumber;
-                        try {
-                            startRowNumber = Character.getNumericValue(startPosition.charAt(1)) - 1;
-                            switch(startColNumber){
-                                case 0:
-                                    startColNumber = 7;
-                                    break;
-                                case 1:
-                                    startColNumber = 6;
-                                    break;
-                                case 2:
-                                    startColNumber = 5;
-                                    break;
-                                case 3:
-                                    startColNumber = 4;
-                                    break;
-                                case 4:
-                                    startColNumber = 3;
-                                    break;
-                                case 5:
-                                    startColNumber = 2;
-                                    break;
-                                case 6:
-                                    startColNumber = 1;
-                                    break;
-                                case 7:
-                                    startColNumber = 0;
-                                    break;
-                            }
-                            if (startRowNumber >= 0 && startRowNumber <= 7 && startColNumber >= 0 && startColNumber <= 7) {
-                                System.out.println("Enter the end position: (Ex. a1)");
-                                String endPos = s.nextLine();
-                                if (endPos.length() == 2) {
-                                    char endColLetter = endPos.charAt(0);
-                                    int endColNumber = endColLetter - 'a';
-                                    int endRowNumber;
-                                    try {
-                                        endRowNumber = Character.getNumericValue(endPos.charAt(1)) -1;
-                                        switch(endColNumber){
-                                            case 0:
-                                                endColNumber = 7;
-                                                break;
-                                            case 1:
-                                                endColNumber = 6;
-                                                break;
-                                            case 2:
-                                                endColNumber = 5;
-                                                break;
-                                            case 3:
-                                                endColNumber = 4;
-                                                break;
-                                            case 4:
-                                                endColNumber = 3;
-                                                break;
-                                            case 5:
-                                                endColNumber = 2;
-                                                break;
-                                            case 6:
-                                                endColNumber = 1;
-                                                break;
-                                            case 7:
-                                                endColNumber = 0;
-                                                break;
-                                        }
-                                        if (endColNumber >= 0 && endColNumber <= 7 && endRowNumber >= 0 && endRowNumber <= 7) {
-                                            ChessPosition startingPosition = new ChessPosition(startRowNumber, startColNumber);
-                                            ChessPosition endingPosition = new ChessPosition(endRowNumber, endColNumber);
-                                            ChessMove move = new ChessMove(startingPosition, endingPosition, null);
-                                            webSocketFacade.makeMove(TokenPlaceholder.token, gameID, move);
-                                        } else {
-                                            System.out.println("Invalid end position. Enter column (a-h) and row (1-8).");
-                                        }
-                                    } catch (NumberFormatException e) {
-                                        System.out.println("Invalid end row number. Must be 1-8.");
-                                        gamePlay(server,port);
-                                    }
-                                } else {
-                                    System.out.println("Invalid end position. Enter a valid position: (a-h)(1-8)");
-                                }
-
-                                validStart = true;
-                            } else {
-                                System.out.println("Invalid starting position. Enter column (a-h) and row (1-8).");
-                            }
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid starting row number. Must be 1-8.");
-                            gamePlay(server, port);
-                        }
-                    }
-                } else {
-                    System.out.println("Invalid input. Enter a valid position: (a-h)(1-8)");
-                }
-                gamePlay(server, port);
-                break;
-            default:
-                System.out.println("Invalid Command");
-                gamePlay(server, port);
-                break;
+        if (startPosition == null) {
+            gamePlay(server, port);
+            return;
         }
+        ChessPosition start = parseChessPosition(startPosition);
+        if (start == null) {
+            System.out.println("Invalid starting position. Enter column (a-h) and row (1-8).");
+            gamePlay(server, port);
+            return;
+        }
+        String endPosition = getInputPosition("Enter the end position: (Ex. a1)", s);
+        if (endPosition == null) {
+            gamePlay(server, port);
+            return;
+        }
+        ChessPosition end = parseChessPosition(endPosition);
+        if (end == null) {
+            System.out.println("Invalid end position. Enter column (a-h) and row (1-8).");
+            gamePlay(server, port);
+            return;
+        }
+        ChessMove move = new ChessMove(start, end, null);
+        webSocketFacade.makeMove(TokenPlaceholder.token, gameID, move);
+        gamePlay(server, port);
+    }
+    private static String getInputPosition(String prompt, Scanner s) {
+        System.out.println(prompt);
+        String input = s.nextLine();
+        if (input.length() != 2) {
+            System.out.println("Invalid input. Enter a valid position: (a-h)(1-8)");
+            return null;
+        }
+        return input;
+    }
+    private static ChessPosition parseChessPosition(String position) {
+        try {
+            char colLetter = position.charAt(0);
+            int colNumber = colLetter - 'a';
+            colNumber = 7 - colNumber;
+            int rowNumber = Character.getNumericValue(position.charAt(1)) - 1;
+            if (rowNumber >= 0 && rowNumber <= 7 && colNumber >= 0 && colNumber <= 7) {
+                return new ChessPosition(rowNumber, colNumber);
+            }
+        } catch (Exception e) {
+        }
+        return null;
     }
     @Override
     public void notify(String message) {
